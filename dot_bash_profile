@@ -19,6 +19,9 @@ alias splact="docker run --rm -it --name splact -e USER=$USER \
 #########################
 
 # get docker credentials 
+export DOCKER_USER=
+export DOCKER_API_KEY=
+export DOCKER_CREDS=$DOCKER_USER:$DOCKER_API_KEY
 [[-z "~/.docker_cred"]] && . ~/.docker_cred
 
 # . /usr/local/anaconda/etc/profile.d/conda.sh  # commented out by conda initialize
