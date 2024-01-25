@@ -91,12 +91,12 @@ source ~/.zsh/catppuccin_frappe-zsh-syntax-highlighting.zsh
 plugins=(
     autojump
     dirhistory
-    git 
+    git
     github
     zsh-autosuggestions
     zsh-syntax-highlighting
-    virtualenv 
-    sudo 
+    virtualenv
+    sudo
     command-not-found
     fzf
     kubectl
@@ -592,7 +592,7 @@ VLESS=$(find /usr/local/bin/nvim -name 'less.sh')
 if [ ! -z $VLESS ]; then
     alias less=$VLESS
 fi
-export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s" 
+export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
 export LESS=" -R"
 
 
@@ -762,7 +762,7 @@ function pj () {
 export GITLAB_TOKEN=
 export GITLAB_FEED_TOKEN=
 export GITLAB_PERSONAL_TOKEN=
-[[ -z "~/.gitlab_cred"]] && . ~/.gitlab_cred
+[[ -z "~/.gitlab_cred" ]] && . ~/.gitlab_cred
 # glab auth login --hostname cd.splunkdev.com --token $GITLAB_TOKEN
 
 alias mymrs='glab mr list --author=@me'
@@ -814,3 +814,20 @@ showcolors ()
 }
 
 alias lc='colorls -lA --sd'
+
+
+################## eza ##########################
+# https://github.com/eza-community/eza?tab=readme-ov-file
+# eza is an ls alternative tool
+
+if ! type "eza" > /dev/null; then
+    if ! type "brew" > /dev/null; then
+        brew install eza
+    else
+        echo "Can't install eza, because homebrew is not installed."
+    fi
+else
+    alias ls='eza'
+fi
+
+#################################################
