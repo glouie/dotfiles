@@ -1,0 +1,816 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+# Path to your oh-my-zsh installation.
+export ZSH=$HOME/.oh-my-zsh
+
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+# ZSH_THEME="robbyrussell"
+# ZSH_THEME="af-magic"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+############# catppuccin theme ##################
+# https://github.com/catppuccin/zsh-syntax-highlighting
+
+source ~/.zsh/catppuccin_frappe-zsh-syntax-highlighting.zsh
+
+# now load zsh-syntax-highlighting plugin
+
+#################################################
+
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in $ZSH/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment one of the following lines to change the auto-update behavior
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+
+# Uncomment the following line to change how often to auto-update (in days).
+# zstyle ':omz:update' frequency 13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# You can also set it to another string to have that shown instead of the default red dots.
+# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
+# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(
+    autojump
+    dirhistory
+    git 
+    github
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+    virtualenv 
+    sudo 
+    command-not-found
+    fzf
+    kubectl
+    kubectx
+    macos
+    node
+    npm
+    pipenv
+    pylint
+    python
+    poetry
+    gcloud
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# plugins=(virtualenv)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv)
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/glouie/miniconda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/glouie/miniconda/etc/profile.d/conda.sh" ]; then
+        . "/Users/glouie/miniconda/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/glouie/miniconda/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+######################## START ZSH ########################
+# install brew:
+# ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+#
+# macOS: install XCode Command Line Tool
+# $ xcode-select —-install
+#
+# Run the following command to install ZSH. It gets installed at /usr/local/bin/zsh PS: Mac’s default ZSH is at /bin/zsh
+# brew install zsh
+#
+# Change the default shell
+# chsh -s /usr/local/bin/zsh
+
+# Install home brew if not found.
+if [ ! -f /usr/local/bin/brew ]; then
+    echo "/usr/local/bin/brew was not found. Installing homebrew..."
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
+
+# Install omg zsh from homebrew to use. Instead of the default zsh.
+if [ ! -f /usr/local/bin/zsh ]; then
+    echo "/usr/local/bin/zsh was not found. Installing zsh from homebrew..."
+    brew install zsh
+
+    echo "Change the shell to the homebrew zsh."
+    chsh -s /usr/local/bin/zsh
+    echo "Logout and Log back in."
+fi
+
+# Check to see that we are using the right zsh.
+if [ ! `which zsh` = "/usr/local/bin/zsh" ]; then
+    echo "Note: you are not using the homebrew zsh"
+fi
+
+# Install Oh My ZSH
+# https://github.com/ohmyzsh/ohmyzsh#manual-installation
+#
+# git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
+# plugins=(git)
+#
+# source $ZSH/oh-my-zsh.sh
+#
+
+########################  END ZSH  ########################
+
+#<!-- START ORCA ALIAS -->
+unalias orca 2>/dev/null
+unalias orca_ssh 2>/dev/null
+unalias orca_dev 2>/dev/null
+unalias orca_debug_sh 2>/dev/null
+
+latest_check() {
+       # 1st argument is the repo to compare against, dev or prod
+        repotarget=""
+        shorttarget=""
+        if [ "$1" = "dev" ]; then
+          repotarget="repo.splunk.com/splunk/products/orca/branches/develop"
+          shorttarget="splunk/products/orca/branches/develop"
+        else
+          repotarget="repo.splunk.com/splunk/products/orca"
+          shorttarget="splunk/products/orca "
+        fi
+        fulltarget=$repotarget":latest"
+        LOCAL_SHA=$(docker images --digests | grep "${repotarget}\s" | grep latest | awk -F' ' '{print$3}')
+        REMOTE=$(ping -c 1 -t 3 repo.splunk.com 2>/dev/null)
+        if [[ "$REMOTE" = *"0 packets received"* || "$REMOTE" = *"Unknown host"* || "$REMOTE" = "" ]]; then
+          echo Connection to repo.splunk.com failed! Unable to check 'latest' image version.
+        else
+          command='curl -s "https://repo.splunk.com/artifactory/ui/views/dockerv2" -XPOST -H "Content-Type: application/json;charset=UTF-8" -H "Request-Agent: artifactoryUI" --data-binary '\''{"view":"dockerv2","repoKey":"docker-solutions-local","path":"'$shorttarget"/latest"'"}'\'' | python -c "from __future__ import print_function; import sys, json; print (json.load(sys.stdin)['\''tagInfo'\'']['\''digest'\''])"'
+           REMOTE_SHA=$(eval $command)
+           if [ "$LOCAL_SHA" != "$REMOTE_SHA" ]; then
+             while true; do
+               read "yn?There is a new version available for ORCA. Would you like to upgrade? [y/n] "
+                 case $yn in
+                   [Yy]* ) docker pull $fulltarget;
+                           if [ $? -eq 0 ]; then
+                                echo "Your local 'latest' ORCA image is up to date!";
+                            else
+                                echo "Error pulling 'latest' ORCA image";
+                            fi
+                     break;;
+                   [Nn]* ) break;;
+                   * ) echo 'Please enter yes or no.';;
+                 esac
+             done
+             while true; do
+               read "yn?Do you wish to remove old ORCA images? [y/n] "
+                 case $yn in
+                   [Yy]* ) docker images | grep $repotarget | awk -F' ' '{print$3}' | tail -n+4 | xargs docker rmi -f
+                     echo "All ORCA images except the latest 3 have been removed!";
+                     echo "Kept images:";
+                     docker images | grep $repotarget;
+                     echo;
+                     break;;
+                   [Nn]* ) break;;
+                   * ) echo 'Please enter yes or no.';;
+                 esac
+              done
+           fi
+        fi
+};
+
+orca() {
+    latest_check
+    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $HOME/.orca:/root/.orca \
+        -v $HOME/.docker:/root/.docker \
+        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:latest \
+        "$@"
+};
+
+orca_ssh() {
+    latest_check
+    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $HOME/.orca:/root/.orca \
+        -v $HOME/.ssh:/root/.ssh \
+        -v $HOME/.docker:/root/.docker \
+        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:latest \
+        "$@"
+};
+
+orca_dev() {
+    latest_check dev
+    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $HOME/.orca:/root/.orca \
+        -v $HOME/.docker:/root/.docker \
+        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca/branches/develop:latest \
+        "$@"
+};
+
+orca_debug_sh() {
+    latest_check
+    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $HOME/.orca:/root/.orca \
+        -v $HOME/.docker:/root/.docker \
+        --entrypoint /bin/sh \
+        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:latest \
+        "$@"
+};
+
+orca_beta() {
+    latest_check
+    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $HOME/.orca:/root/.orca \
+        -v $HOME/.docker:/root/.docker \
+        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:beta \
+        "$@"
+};
+
+update_orca_alias() {
+    sed -i '' '/#<!-- START ORCA ALIAS -->/,/#<!-- END ORCA ALIAS -->\n/d' ~/.zshrc
+    curl -s https://repo.splunk.com/artifactory/Solutions/Common/misc/orca_zsh.sh >> ~/.zshrc
+    echo "Please run 'source ~/.zshrc' or restart your shell."
+};
+
+update_orca_nfr_license() {
+    curl -L -o ~/.orca/nfr_enterprise.lic http://go.splunk.com/splunk-nfr-license
+};
+#<!-- END ORCA ALIAS -->
+
+
+alias zshrc='source ~/.zshrc'
+alias reload='source ~/.zshrc'
+alias editrc='nvim ~/.zshrc'
+
+alias ls='ls -GFhsh'
+alias mkdir='mkdir -p'
+alias distro='cat /etc/*-release'
+alias myip='curl http://ipecho.net/plain; echo'
+alias zshconfig='subl $HOME/.zshrc'
+
+alias server='python -m SimpleHTTPServer 8000'
+alias npmhelp='chrome https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/npm'
+alias suidocs='chrome https://splunkui.splunkeng.com/'
+
+alias show_remap='nvim ~/.config/nvim/lua/glouie/remap.lua'
+
+###### Start Virtualenv #########
+
+# Get Virtual Env
+if [[ $VIRTUAL_ENV != "" ]]
+then
+    # Strip out the path and just leave the env name
+    # venv="${RED}(${VIRTUAL_ENV##*/})$ORIGINAL"
+    venv="::${VIRTUAL_ENV##*/}:: "
+else
+    # In case you don't have one activated
+    venv=''
+fi
+
+alias splunkqa='deactivate; source ~/.zshrc; source ~/venv/splunkqa/bin/activate; export REPO=$HOME/gitlab/qa; cdr'
+alias minnow='deactivate; source ~/.zshrc; source ~/venv/minnow/bin/activate; export REPO=$HOME/gitlab/minnow; cdr'
+alias htmlwd='deactivate; source ~/.zshrc; source ~/venv/htmlwd/bin/activate; export REPO=$HOME/gitlab/html-webdriver; cdr'
+alias dataanalysis='deactivate; source ~/.zshrc; source ~/venv/dataanalysis/bin/activate; export REPO=$HOME/gitlab/data-analysis; cdr; export TEST_DIR=$REPO/test/ui'
+alias sui='deactivate; source ~/.zshrc; source ~/venv/splunkui/bin/activate; export REPO=$HOME/gitlab/splunk-ui-test-functional; cdr; export TEST_DIR=$REPO'
+
+alias pipi='pip3.8 install -i https://repo.splunk.com/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple'
+alias pip-uninstall-all='pip3.8 freeze | grep -v "^-e" | grep -v "@" | xargs pip3.8 uninstall -y'
+alias pip='pip3.8'
+
+alias cleansplunkqa='deactivate; virtualenv --clear $HOME/venv/splunkqa; splunkqa; cd $HOME/gitlab/qa/new_test; pip install -U pip; pip install -r requirements.txt; pip install bpython pylint; setupcushy; export REPO=$HOME/gitlab/qa; cdr'
+
+venv() {
+
+    if (( "$#" < "1" ));
+    then
+        echo "** Usage: venv <virtualenv name>"
+        return 1
+    fi
+
+    source $HOME/venv/$1/bin/activate
+    source $HOME/.bashrc
+}
+
+###### End Virtualenv #########
+
+
+
+export GIT_EDITOR=nvim
+
+######### OPENSSL #########
+export PATH=/usr/local/opt/openssl/bin:$PATH
+
+
+# $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+########## pytest ############
+# export PYTEST_ADDOPTS="-x --index-wait=0 --browser=chrome"
+# export PYTEST_ADDOPTS="-x --browser=chrome"
+
+########### .BASHRC ##########
+
+export ORIG_PATH=$PATH
+export PATH_HISTORY=$PWD
+export PKG_HOME=$HOME/pkg
+export GIT_HOME=$HOME/gitlab
+export TEST_DIR=$GIT_HOME/qa/new_test
+export SPLUNK_SRC=$GIT_HOME/qa
+
+if [[ $HOSTNAME == "" ]]
+then
+    export HOSTNAME=`hostname`
+fi
+hostname=$HOSTNAME
+export REPO=$GIT_HOME
+# echo "hostname is: "$hostname
+
+# Sauce Labs
+# - either set or source a file containing the user and key
+export SAUCE_USER=
+export SAUCE_API_KEY=
+[[ -z ~/.sauce_labs ]] && . ~/.sauce_labs
+
+# Synergy path
+
+export PATH=$PATH:~/bin/synergy/
+
+# Splunk Perforce alias
+
+# source ~/.p4env
+# alias p4='p4 login -s &> /dev/null || echo $P4PASSWD | p4 login &> /dev/null; p4 $*'
+
+# MacPorts path variable
+
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+
+
+# Splunk environment variables
+[[ -r ~/.splunk_profile ]] && . ~/.splunk_profile
+
+# My own bin directory for scripts, etc.
+export PATH=$PATH:~/bin/
+
+# PYTHON STARTUP for autocompletion and history.
+export PYTHONSTARTUP=$HOME/.pystartup
+
+cd_splunk_src(){
+    cd $SPLUNK_SRC/$1
+}
+
+cd_splunk_home(){
+    cd $SPLUNK_HOME/$1
+}
+
+cd_git(){
+    cd $GIT_HOME/$1
+}
+
+alias setcurrent='setupenv current'
+alias cds='cdr; cd ~/gitlab/main/qa/new_test'
+alias cdg='cd_git'
+alias cdl='cds; cd lib/'
+alias cdh='cd_splunk_home'
+alias cdm='cd ~/gitlab/main'
+alias cdwd='cds; cd tests/web/webdriver'
+alias cdr='cd $REPO'
+
+alias cd='savepath;cd'
+alias cdb='pop_savepath;cd $PREV_PATH;pop_savepath'
+
+alias bashrc='. ~/.bashrc'
+alias ll='ls -lah'
+
+alias splunkstart='$SPLUNK_HOME/bin/splunk start --accept-license --answer-yes'
+alias splunksearch='$SPLUNK_HOME/bin/splunk search -auth admin:changeme'
+alias splunkhome='echo $SPLUNK_HOME'
+alias splunk='$SPLUNK_HOME/bin/splunk'
+alias splunkstatus='$SPLUNK_HOME/bin/splunk status; $SPLUNK_HOME/bin/splunk show splunkd-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show web-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show kvstore-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show kvstore-status -auth "admin:changeme"'
+alias splunkloglevel='splunk show log-level -auth "admin:changeme" | grep -i -A 1'
+
+splunkseedpasswd(){
+    echo "Setting up admin:changeme user..."
+    echo "[user_info]\nUSERNAME = admin\nPASSWORD=changeme\n" > $SPLUNK_HOME/etc/system/local/user-seed.conf
+}
+
+
+savepath(){
+    export PATH_HISTORY=$PWD':'$PATH_HISTORY
+    #echo $PATH_HISTORY
+}
+
+pwdh(){
+    echo $PATH_HISTORY
+}
+
+pop_savepath(){
+    export PREV_PATH=`echo $PATH_HISTORY | cut -d ':' -f 1`
+    export PATH_HISTORY=`echo $PATH_HISTORY | cut -d ':' -f 2-`
+}
+
+############## Grep #################
+
+GREP_OPTIONS='--color=auto'
+GREP_COLORS='30;43'
+alias grep='grep --color=auto'
+alias rgrep='grep --color=auto -ir'
+
+############## Echo #################
+
+alias envs='env | grep -i'
+
+############## ssh ##################
+alias ronnie='ssh glouie@ronnie'
+alias wimpy='ssh glouie@wimpy'
+alias mrt='ssh glouie@mtr'
+alias qapc='ssh qa@qa-ubuntu-pc.sv.splunk.com'
+alias jenkinsbox='ssh -L 5902:localhost:5902 glouie@qa-jenk-debugging-glouie.sv.splunk.com'
+alias gmac='ssh glouie@gmac.sv.splunk.com'
+alias guinness='ssh glouie-temp@guinness.webdev.splunk.com'
+
+function box(){
+    sshhost="glouie@glouie-box-"$1".sv.splunk.com"
+    echo "Trying to ssh into $sshhost ..."
+    ssh $sshhost
+}
+alias box1='box 001'
+alias box2='box 002'
+alias box3='box 003'
+alias box4='box 004'
+alias box5='box 005'
+alias box6='box 006'
+alias box7='box 007'
+alias box8='box 008'
+alias box9='box 009'
+alias box10='box 010'
+
+sendsshkey(){
+
+    # note: for it to work you need to make sure perms are right.
+    # $ chmod 700 ~/.ssh
+    # $ chmod 600 ~/.ssh/authorized_keys
+
+    if (( "$#" < "1" ));
+    then
+        echo "** Usage: sendsshkey user@hostname"
+        return 1
+    fi
+    cat ~/.ssh/id_rsa.pub | ssh $1 'cat >> ~/.ssh/authorized_keys'
+}
+
+
+############## splunk ##################
+
+alias cdl='cdr; cd new_test/lib'
+alias cdt='cdr; cd new_test/tests'
+
+############## misc #################
+
+alias py='/usr/bin/python'
+alias rest='curl -k -u admin:changeme -X '
+alias rmcasper='sudo /usr/sbin/jamf removeFramework'
+
+
+# for osx: ex. fnr *.py s/this/that/g
+alias fnr='find . -type f -name "{1}" -exec sed -i "" {2} {} +'
+
+############## jira #################
+
+function createjira ()
+{
+    cmd="jira "
+    options=$*
+    cmd="jira $options"
+    output=`eval "$HOME/bin/jira_link_generator $options"`
+    rtn=$?
+    echo "Link: $output"
+    if [ "$rtn" == "0" ]
+    then
+    open "$output"
+    fi
+}
+
+############# csv #################
+
+printcsv()
+{
+    awk -F, '{for (i=1;i<=NF;++i) {if (NR>1) val[i] = $i; else key[i] = $i}} END {for (j=1;j<i;++j)
+printf("%2d%30s = %s\n", j, key[j], val[j])}' $1
+}
+############# misc ################
+
+# https://www.sublimetext.com/docs/3/osx_command_line.html
+alias subl='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -a'
+alias opensubldir='open ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User/'
+alias splinfo='echo "SPLUNK_HOME: $SPLUNK_HOME"; splunk status --accept-license; echo "SPLUNK_SRC: $SPLUNK_SRC"; echo "PYTHONPATH: $PYTHONPATH"'
+
+VLESS=$(find /usr/local/bin/nvim -name 'less.sh')
+if [ ! -z $VLESS ]; then
+    alias less=$VLESS
+fi
+export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s" 
+export LESS=" -R"
+
+
+alias vim='nvim'
+alias vi='nvim'
+
+alias rmpyc='find . -name "*.pyc" -print0 | xargs -0 rm'
+alias rmlog='find . -name "*.log" -print0 | xargs -0 rm'
+alias rmhtml='find . -name "*.html" -print0 | xargs -0 rm'
+alias rmxml='find . -name "*.xml" -print0 | xargs -0 rm'
+alias rmpng='find . -name "screenshot*.png" -print0 | xargs -0 rm'
+alias rmeggs='find . -name "*.egg-info" -print0 | xargs -0 rm -rf'
+alias rmtestlogs='rmpyc;rmlog;rmhtml;rmxml;rmpng'
+
+alias pyl='pylint -d "C0103,R0902,R0904,R0801,C0302,W0105,R0913"'
+
+function get_running_splunk_home(){
+    process_num=`ps ax | grep splunkd | grep -v "process-runner" | grep start | awk '{print $1}'`
+    spl_home=`ps -E -ww -p $process_num | awk -F "SPLUNK_HOME=" '{print $2}' | awk -F " " '{print $1}'`
+    echo ${spl_home//[$'\t\r\n']}
+
+}
+
+set2runningsplunk(){
+    splhome=`get_running_splunk_home`
+    export SPLUNK_HOME=$splhome
+}
+
+stopsplunk(){
+    splhome=`get_running_splunk_home`
+    $splhome/bin/splunk stop
+}
+
+restartsplunk(){
+    splhome=`get_running_splunk_home`
+    $splhome/bin/splunk restart
+}
+
+############## git ###############
+
+function gitcreatebranch(){
+
+    if (( "$#" < "2" ));
+    then
+        echo "** Usage: gitcreatebranch <new_branch> <upstream_branch>"
+        return 1
+    fi
+
+    git checkout -b $1
+    git push -u origin $1
+    git branch --set-upstream-to=$2 $1
+}
+
+alias ga='git add'
+alias gc='git commit'
+alias gd='git diff'
+alias gs='git status'
+alias gps='git push'
+alias gpl='git pull'
+
+##################################
+
+
+export NVM_DIR="/Users/glouie/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+
+######### pycharm ###############
+
+alias pycharm='/usr/local/bin/charm'
+
+######### shortcuts ###############
+alias wtf='open https://confluence.splunk.com/display/PROD/Webdriver+Test+Framework'
+# alias jenkin='open https://apps-jenkins.sv.splunk.com/'
+# alias jira='open https://jira.splunk.com/browse/'  # use the jira() instead
+alias mainrepo='open https://git.splunk.com/projects/SPLCORE/repos/main/qa/browse'
+alias okta='open https://splunk.okta.com'
+# alias releases='open https://releases.sv.splunk.com'
+
+######## jedi #################
+alias installjedivim='cd ~/.vim/bundle/ && git clone --recursive https://github.com/davidhalter/jedi-vim.git'
+alias installjedi='pip install jedi'
+
+####### vundle ###############
+alias installvundle='git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim'
+
+####### isplunk ##############
+# alias isplunk='cat > /tmp/isplunk.input && isplunk_main -f /tmp/isplunk.input'
+
+
+####### cushion ##############
+# to use backend team cache build server.
+# export SPLUNK_CACHED_BUILDS_SERVER=http://health.sv.splunk.com:8080
+
+
+####### massdrop keyboard ########
+# usage: masskbupdate massdrop_ctrl_config_ctrl__default_6087.bin
+#
+# you will need the mdloader_mac executable
+# download here: https://github.com/Massdrop/mdloader/releases
+#
+# configure keyboard keys here:
+#   https://drop.com/mechanical-keyboards/configurator/
+alias masskbupdate='./mdloader_mac --first --download $1 restart'
+
+# alias samantha='bpython -i ids.py'
+
+####### datf ##############
+alias datf='py.test --browser=chrome --html=report.html  --self-contained-html --deployment-type S1 --infra-type=ucp --local-instance --check-crash-logs --action-on-crash=stop --check-splunk-logs'
+alias datfrm='py.test --browser=chrome --html=report.html  --self-contained-html --deployment-type S1 --infra-type=ucp --local-instance --diag --check-crash-logs --action-on-crash=stop --check-splunk-logs'
+alias datfhl='py.test --browser=chrome --html=report.html  --self-contained-html --chrome-options="--headless" --deployment-type S1 --infra-type=ucp --local-instance --diag --check-crash-logs --action-on-crash=stop --check-splunk-logs'
+
+####### open ##############
+function flakyfe () {
+    # usage: flakyfe test_something
+    open "https://go/flaky-fe/$1"
+}
+
+function flakybe () {
+    # usage: flakybe test_something
+    open "https://go/flaky-be/$1"
+}
+
+function jira () {
+    # usage: jira spl-12345
+    open "https://splunk.atlassian.net/secure/QuickSearch.jspa?searchString=$1"
+}
+
+function gitlab () {
+    # usage: gitlab hello
+    open "https://cd.splunkdev.com/search?search=$1"
+}
+
+function splmain () {
+    # usage: splmain hello
+    # project id 7712 is "main"
+    # group id 3228 is "Splunk Core aka splcore"
+    open "https://cd.splunkdev.com/search?group_id=3228&project_id=7712&search=$1"
+}
+
+function chrome () {
+    # chrome <page>
+    /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome $1
+}
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
+alias pjson='python -m json.tool'
+
+
+function pj () {
+    # python3 - << EOF
+    #     import pprint
+    #     pprint.pprint("""'$args'""")
+    # EOF
+    PYCMD='import pprint; pprint.pprint("""'$@'""")'
+    python -c"$PYCMD"
+}
+
+################### Glab ########################
+# install: brew install glab
+# https://glab.readthedocs.io/en/latest/intro.html
+# https://github.com/profclems/glab#installation
+
+
+####### gitlab #######
+export GITLAB_TOKEN=
+export GITLAB_FEED_TOKEN=
+export GITLAB_PERSONAL_TOKEN=
+[[ -z "~/.gitlab_cred"]] && . ~/.gitlab_cred
+# glab auth login --hostname cd.splunkdev.com --token $GITLAB_TOKEN
+
+alias mymrs='glab mr list --author=@me'
+
+
+################### vault #######################
+
+# https://developer.hashicorp.com/vault/downloads
+# https://developer.hashicorp.com/vault/tutorials/getting-started/getting-started-install
+#
+# To install
+# brew tap hashicorp/tap
+# brew install hashicorp/tap/vault
+
+# To update
+# brew upgrade hashicorp/tap/vault
+
+export VAULT_ADDR=https://secrets.splunkit.io
+export VAULT_NAMESPACE=eeff
+# vault login -method=okta username=<USERNAME> (without @splunk.com. Example: psahasrabudhe)
+
+# Enter password and Complete Okta MFA
+
+export VAULT_NAMESPACE=eeff/application
+# vault kv list kv_co2_stg
+# vault kv get kv_co2_stg/svc-eecq-co2-stg  ---→ store this key on your local machine ( preferably under ~/.ssh/id_rsa and change key permissions: chmod 600 <KEY_PATH>)
+
+#################################################
+
+
+#################### p10k #######################
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# source ~/powerlevel10k/powerlevel10k.zsh-theme
+
+#################################################
+
+
+################ scm_breeze  ####################
+# https://github.com/scmbreeze/scm_breeze
+
+[ -s "/Users/glouie/.scm_breeze/scm_breeze.sh" ] && source "/Users/glouie/.scm_breeze/scm_breeze.sh"
+
+#################################################
+
+showcolors ()
+{
+    for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f" ${${(M)$((i%6)):#3}:+$'\n'}; done
+}
+
+alias lc='colorls -lA --sd'
