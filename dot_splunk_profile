@@ -930,7 +930,8 @@ alias setsierra='echo "OPTIMISTIC_ABOUT_FILE_LOCKING = 1" >> $SPLUNK_HOME/etc/sp
 ####### gitlab #######
 export GITLAB_TOKEN=
 export GITLAB_FEED_TOKEN=
-[[ -z "~/.gitlab_cred"]] && . ~/.gitlab_cred
+export GITLAB_PERSONAL_TOKEN=
+[[ -z "~/.gitlab_cred" ]] && . ~/.gitlab_cred
 
 
 #<!-- START ORCA ALIAS -->
