@@ -172,18 +172,18 @@ unset __conda_setup
 # chsh -s /usr/local/bin/zsh
 
 # Install home brew if not found.
-if [ ! -f /usr/local/bin/brew ]; then
-    echo "/usr/local/bin/brew was not found. Installing homebrew..."
+if ! type "brew" > /dev/null; then
+    echo "brew was not found. Installing homebrew..."
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
 # Install omg zsh from homebrew to use. Instead of the default zsh.
-if [ ! -f /usr/local/bin/zsh ]; then
-    echo "/usr/local/bin/zsh was not found. Installing zsh from homebrew..."
+if ! type "zsh" > /dev/null; then
+    echo "zsh was not found. Installing zsh from homebrew..."
     brew install zsh
 
     echo "Change the shell to the homebrew zsh."
-    chsh -s /usr/local/bin/zsh
+    chsh -s zsh
     echo "Logout and Log back in."
 fi
 
@@ -821,13 +821,79 @@ alias lc='colorls -lA --sd'
 # eza is an ls alternative tool
 
 if ! type "eza" > /dev/null; then
-    if ! type "brew" > /dev/null; then
+    if type "brew" > /dev/null; then
         brew install eza
     else
         echo "Can't install eza, because homebrew is not installed."
     fi
 else
     alias ls='eza'
+    alias ll='eza -alh'
+    alias tree='eza --tree'
 fi
 
 #################################################
+
+################## bat ##########################
+# bat is an less alternative tool
+
+if ! type "bat" > /dev/null; then
+    if type "brew" > /dev/null; then
+        brew install bat 
+    else
+        echo "Can't install bat, because homebrew is not installed."
+    fi
+else
+    alias less='bat'
+    alias cat='bat -p'
+fi
+
+#################################################
+
+############## ripgrep ##########################
+# ripgrep is an grep alternative tool
+
+if ! type "rg" > /dev/null; then
+    if type "brew" > /dev/null; then
+        brew install ripgrep 
+    else
+        echo "Can't install ripgrep, because homebrew is not installed."
+    fi
+else
+    alias grep='rg'
+fi
+
+################################################
+
+
+################# fzf ##########################
+# fzf is a fuzzy finder tool.
+
+if ! type "fzf" > /dev/null; then
+    if type "brew" > /dev/null; then
+        brew install fzf 
+    else
+        echo "Can't install fzf, because homebrew is not installed."
+    fi
+fi
+
+################################################
+
+
+############## Zoxide ##########################
+# Zoxide is a cd alternative tool 
+
+if ! type "zoxide" > /dev/null; then
+    if type "brew" > /dev/null; then
+        brew install zoxide
+    else
+        echo "Can't install zoxide, because homebrew is not installed."
+    fi
+else
+    alias z='zoxide'
+    alias cd='z'
+    alias cdb='z -'
+    alias zz='z -'
+fi
+
+################################################
