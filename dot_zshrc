@@ -839,7 +839,7 @@ fi
 
 if ! type "bat" > /dev/null; then
     if type "brew" > /dev/null; then
-        brew install bat 
+        brew install bat
     else
         echo "Can't install bat, because homebrew is not installed."
     fi
@@ -855,7 +855,7 @@ fi
 
 if ! type "rg" > /dev/null; then
     if type "brew" > /dev/null; then
-        brew install ripgrep 
+        brew install ripgrep
     else
         echo "Can't install ripgrep, because homebrew is not installed."
     fi
@@ -871,7 +871,7 @@ fi
 
 if ! type "fzf" > /dev/null; then
     if type "brew" > /dev/null; then
-        brew install fzf 
+        brew install fzf
     else
         echo "Can't install fzf, because homebrew is not installed."
     fi
@@ -881,7 +881,7 @@ fi
 
 
 ############## Zoxide ##########################
-# Zoxide is a cd alternative tool 
+# Zoxide is a cd alternative tool
 
 if ! type "zoxide" > /dev/null; then
     if type "brew" > /dev/null; then
@@ -890,7 +890,6 @@ if ! type "zoxide" > /dev/null; then
         echo "Can't install zoxide, because homebrew is not installed."
     fi
 else
-    alias z='zoxide'
     alias cd='z'
     alias cdb='z -'
     alias zz='z -'
