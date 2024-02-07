@@ -103,7 +103,7 @@ else
     venv=''
 fi
 
-alias splunkqa='deactivate; source ~/venv/splunkqa/bin/activate; source ~/.bashrc; export REPO=$HOME/gitlab/qa; cdr'
+alias splunkqa='deactivate; source ~/venv/splunkqa/bin/activate; source ~/.bashrc; export REPO=$HOME/gitlab/main/qa; cdr'
 alias minnow='deactivate; source ~/venv/minnow/bin/activate; source ~/.bashrc; export REPO=$HOME/gitlab/minnow; cdr'
 alias htmlwd='deactivate; source ~/venv/htmlwd/bin/activate; source ~/.bashrc; export REPO=$HOME/gitlab/html-webdriver; cdr'
 alias dataanalysis='deactivate; source ~/venv/dataanalysis/bin/activate; source ~/.bashrc; export REPO=$HOME/gitlab/data-analysis; cdr; export TEST_DIR=$REPO/test/ui'
@@ -111,7 +111,7 @@ alias sui='deactivate; source ~/venv/splunkui/bin/activate; source ~/.bashrc; ex
 
 alias pipi='pip install -i https://repo.splunk.com/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple'
 
-alias cleansplunkqa='deactivate; virtualenv --clear $HOME/venv/splunkqa; splunkqa; cd $HOME/gitlab/qa/new_test; pip install -U pip; pip install -r requirements.txt; pip install bpython pylint; setupcushy; export REPO=$HOME/gitlab/qa; cdr'
+alias cleansplunkqa='deactivate; virtualenv --clear $HOME/venv/splunkqa; splunkqa; cd $HOME/gitlab/main/qa/new_test; pip install -U pip; pip install -r requirements.txt; pip install bpython pylint; setupcushy; export REPO=$HOME/gitlab/main/qa; cdr'
 
 venv() {
 
