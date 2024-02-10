@@ -860,7 +860,7 @@ if ! type "rg" > /dev/null; then
         echo "Can't install ripgrep, because homebrew is not installed."
     fi
 else
-    alias grep='rg'
+    # alias grep='rg'
 fi
 
 ################################################
@@ -890,8 +890,8 @@ if ! type "zoxide" > /dev/null; then
         echo "Can't install zoxide, because homebrew is not installed."
     fi
 else
-    alias cd='z'
-    alias cdb='z -'
+    # alias cd='z'
+    # alias cdb='z -'
     alias zz='z -'
 fi
 
