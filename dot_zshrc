@@ -890,9 +890,7 @@ if ! type "zoxide" > /dev/null; then
         echo "Can't install zoxide, because homebrew is not installed."
     fi
 else
-    # alias cd='z'
-    # alias cdb='z -'
-    alias zz='z -'
+    eval "$(zoxide init --cmd cd zsh)"
 fi
 
 ################################################
