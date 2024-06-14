@@ -1,0 +1,37 @@
+return {
+  -- {
+  --   'nvim-neorg/neorg',
+  --   build = ':Neorg sync-parsers',
+  --   -- tag = "*",
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim',
+  --     'nvim-neorg/lua-utils.nvim',
+  --     'vhyrro/luarocks.nvim',
+  --   },
+  --   config = function()
+  --     require('neorg').setup {
+  --       load = {
+  --         ['core.defaults'] = {}, -- Loads default behaviour
+  --         ['core.concealer'] = {}, -- Adds pretty icons to your documents
+  --         ['core.dirman'] = { -- Manages Neorg workspaces
+  --           config = {
+  --             workspaces = {
+  --               notes = '~/notes',
+  --               splunk = '~/notes/splunk',
+  --               learning = '~/notes/learning',
+  --             },
+  --             default_workspace = 'splunk',
+  --           },
+  --         },
+  --         ['core.export'] = {},
+  --         ['core.export.markdown'] = {},
+  --         -- ["core.presenter"] = {},
+  --         ['core.summary'] = {},
+  --         ['core.syntax'] = {},
+  --         -- ["core.ui.calendar"] = {},
+  --         ['core.ui'] = {},
+  --       },
+  --     }
+  --   end,
+  -- },
+}
