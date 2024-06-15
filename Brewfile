@@ -1,50 +1,143 @@
-tap "abdfnx/tap"
-tap "hashicorp/tap"
-tap "homebrew/bundle"
-tap "scmn-dev/tap"
-tap "teamookla/speedtest"
-brew "ack"
-brew "pycparser"
-brew "cffi"
-brew "cryptography"
-brew "ansible"
-brew "asciinema"
-brew "autojump"
-brew "bat"
-brew "chezmoi"
-brew "curl"
-brew "php"
-brew "composer"
-brew "entr"
-brew "eza"
-brew "fzf"
-brew "glab"
-brew "go"
-brew "harfbuzz"
-brew "openjdk"
-brew "gradle"
-brew "lazygit"
-brew "lua"
-brew "luarocks"
-brew "midnight-commander"
-brew "neovim"
-brew "node"
-brew "openssl@1.1"
-brew "pyenv"
-brew "pygments"
-brew "python@3.11"
-brew "python@3.8"
-brew "ripgrep"
-brew "ruby"
-brew "source-highlight"
-brew "tmux"
-brew "tree"
-brew "wget"
-brew "yarn"
-brew "zellij"
-brew "zoxide"
-brew "zsh"
-brew "abdfnx/tap/tran"
-brew "hashicorp/tap/vault"
-brew "scmn-dev/tap/secman"
-brew "teamookla/speedtest/speedtest"
+ack
+ansible
+aom
+apr
+apr-util
+argon2
+asciinema
+aspell
+autoconf
+autojump
+bat
+boost
+brotli
+c-ares
+ca-certificates
+cairo
+certifi
+cffi
+cheat
+chezmoi
+coder
+composer
+cryptography
+curl
+entr
+eslint
+eza
+fontconfig
+freetds
+freetype
+fzf
+gd
+gdbm
+gettext
+giflib
+glab
+glib
+gmp
+go
+gradle
+graphite2
+harfbuzz
+highway
+icu4c
+imath
+jpeg-turbo
+jpeg-xl
+krb5
+lazygit
+libavif
+libevent
+libgit2
+libidn2
+libnghttp2
+libpng
+libpq
+libsodium
+libssh
+libssh2
+libtermkey
+libtiff
+libtool
+libunistring
+libuv
+libvmaf
+libvterm
+libx11
+libxau
+libxcb
+libxdmcp
+libxext
+libxrender
+libyaml
+libzip
+little-cms2
+lpeg
+lua
+luajit
+luarocks
+luv
+lz4
+lzo
+m4
+midnight-commander
+mpdecimal
+msgpack
+ncurses
+neovim
+node
+okta-artifactory-login
+oniguruma
+openexr
+openjdk
+openldap
+openssl
+pcre
+pcre2
+php
+pixman
+pkg-config
+prettier
+pycparser
+pyenv
+pygments
+python-certifi
+python-cryptography
+python-pytz
+python-setuptools
+python@3.11
+python@3.12
+python@3.8
+pyyaml
+readline
+ripgrep
+rtmpdump
+ruby
+s-lang
+secman
+shellcheck
+source-highlight
+speedtest
+sqlite
+tailscale
+tcl-tk
+tidy-html5
+tmux
+tran
+tree
+tree-sitter
+unibilium
+unixodbc
+utf8proc
+vault
+webp
+wget
+xorgproto
+xz
+yarn
+zellij
+zoxide
+zsh
+zstd
+keycastr
