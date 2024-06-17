@@ -111,6 +111,9 @@ alias suidocs='chrome https://splunkui.splunkeng.com/'
 
 alias show_remap='nvim $HOME/.config/nvim/lua/glouie/remap.lua'
 
+# eval "$(brew shellenv)"
+eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
@@ -160,8 +163,6 @@ fi
 #
 
 ########################  END ZSH  ########################
-
-eval "$(brew shellenv)"
 
 
 #<!-- START ORCA ALIAS -->
@@ -498,11 +499,11 @@ alias subl='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -a'
 alias opensubldir='open $HOME/Library/Application\ Support/Sublime\ Text\ 3/Packages/User/'
 alias splinfo='echo "SPLUNK_HOME: $SPLUNK_HOME"; splunk status --accept-license; echo "SPLUNK_SRC: $SPLUNK_SRC"; echo "PYTHONPATH: $PYTHONPATH"'
 
-VLESS=$(find /usr/local/bin/nvim -name 'less.sh')
-if [ -n "$VLESS" ]; then
-    alias less="$VLESS"
-fi
-export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+# VLESS=$(find /usr/local/bin/nvim -name 'less.sh')
+# if [ -n "$VLESS" ]; then
+#     alias less="$VLESS"
+# fi
+# export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
 export LESS=" -R"
 
 
