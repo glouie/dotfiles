@@ -131,6 +131,7 @@ unibilium
 unixodbc
 utf8proc
 vault
+vim
 webp
 wget
 xorgproto
