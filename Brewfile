@@ -87,6 +87,7 @@ msgpack
 ncurses
 neovim
 node
+npm
 okta-artifactory-login
 oniguruma
 openexr
@@ -102,6 +103,7 @@ prettier
 pycparser
 pyenv
 pygments
+pyright
 python-certifi
 python-cryptography
 python-pytz
@@ -127,6 +129,7 @@ tmux
 tran
 tree
 tree-sitter
+tsserver
 unibilium
 unixodbc
 utf8proc
