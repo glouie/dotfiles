@@ -1,145 +1,67 @@
-ack
-ansible
-aom
-apr
-apr-util
-argon2
-asciinema
-aspell
-autoconf
-autojump
-bat
-boost
-brotli
-c-ares
-ca-certificates
-cairo
-certifi
-cffi
-cheat
-chezmoi
-coder
-composer
-cryptography
-curl
-entr
-eslint
-eza
-fontconfig
-freetds
-freetype
-fzf
-gd
-gdbm
-gettext
-giflib
-glab
-glib
-gmp
-go
-gradle
-graphite2
-harfbuzz
-highway
-icu4c
-imath
-jpeg-turbo
-jpeg-xl
-krb5
-lazygit
-libavif
-libevent
-libgit2
-libidn2
-libnghttp2
-libpng
-libpq
-libsodium
-libssh
-libssh2
-libtermkey
-libtiff
-libtool
-libunistring
-libuv
-libvmaf
-libvterm
-libx11
-libxau
-libxcb
-libxdmcp
-libxext
-libxrender
-libyaml
-libzip
-little-cms2
-lpeg
-lua
-luajit
-luarocks
-luv
-lz4
-lzo
-m4
-midnight-commander
-mpdecimal
-msgpack
-ncurses
-neovim
-node
-npm
-okta-artifactory-login
-oniguruma
-openexr
-openjdk
-openldap
-openssl
-pcre
-pcre2
-php
-pixman
-pkg-config
-prettier
-pycparser
-pyenv
-pygments
-pyright
-python-certifi
-python-cryptography
-python-pytz
-python-setuptools
-python
-pyyaml
-readline
-ripgrep
-rtmpdump
-ruby
-s-lang
-secman
-shellcheck
-source-highlight
-speedtest
-sqlite
-tailscale
-tcl-tk
-tidy-html5
-tmux
-tran
-tree
-tree-sitter
-tsserver
-unibilium
-unixodbc
-utf8proc
-vault
-vim
-webp
-wget
-xorgproto
-xz
-yarn
-zellij
-zoxide
-zsh
-zstd
-keycastr
+tap "abdfnx/tap"
+tap "coder/coder"
+tap "hashicorp/tap"
+tap "homebrew/bundle"
+tap "scmn-dev/tap"
+tap "teamookla/speedtest"
+tap "toolbox/tap", "git@cd.splunkdev.com:toolbox/homebrew-tap.git"
+brew "ack"
+brew "pycparser"
+brew "cffi"
+brew "cryptography"
+brew "python@3.12"
+brew "ansible"
+brew "asciinema"
+brew "autojump"
+brew "bat"
+brew "cheat"
+brew "chezmoi"
+brew "curl"
+brew "php"
+brew "composer"
+brew "entr"
+brew "node"
+brew "eslint"
+brew "eza"
+brew "fzf"
+brew "glab"
+brew "go"
+brew "harfbuzz"
+brew "gradle"
+brew "lazygit"
+brew "lua"
+brew "luarocks"
+brew "midnight-commander"
+brew "neovim"
+brew "npm"
+brew "openjdk"
+brew "openssl@1.1"
+brew "prettier"
+brew "pyenv"
+brew "pygments"
+brew "pyright"
+brew "python-pytz"
+brew "python@3.12"
+brew "python@3.11"
+brew "python@3.8"
+brew "pyyaml"
+brew "ripgrep"
+brew "ruby"
+brew "shellcheck"
+brew "source-highlight"
+brew "tailscale"
+brew "tmux"
+brew "tsserver"
+brew "tree"
+brew "vim"
+brew "wget"
+brew "yarn"
+brew "zellij"
+brew "zoxide"
+brew "zsh"
+brew "abdfnx/tap/tran"
+brew "coder/coder/coder"
+brew "hashicorp/tap/vault"
+brew "scmn-dev/tap/secman"
+brew "teamookla/speedtest/speedtest"
+brew "toolbox/tap/okta-artifactory-login"
