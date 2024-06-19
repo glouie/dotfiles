@@ -112,7 +112,7 @@ alias suidocs='chrome https://splunkui.splunkeng.com/'
 alias show_remap='nvim $HOME/.config/nvim/lua/glouie/remap.lua'
 
 # eval "$(brew shellenv)"
-eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+eval $("$HOMEBREW_REPOSITORY"/bin/brew shellenv)
 
 # Shell integrations
 eval "$(fzf --zsh)"
@@ -149,7 +149,7 @@ if ! type "zsh" > /dev/null; then
 fi
 
 # Check to see that we are using the right zsh.
-if [ ! `which zsh` = "/usr/local/bin/zsh" ]; then
+if [ ! `which zsh` = "$HOMEBREW_REPOSITORY"/bin/zsh ]; then
     echo "Note: you are not using the homebrew zsh"
 fi
 
