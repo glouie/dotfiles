@@ -29,3 +29,9 @@ echo "Running 'chezmoi $*'" >&2
 # exec: replace current process with chezmoi
 # exec "$chezmoi" "$@"
 exec "$chezmoi" init --apply glouie
+
+# install homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/glouie/dotfiles/main/install.sh)"
+
+# install Brewfile
+brew bundle install
