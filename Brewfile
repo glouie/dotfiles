@@ -108,9 +108,9 @@ python-certifi
 python-cryptography
 python-pytz
 python-setuptools
-python@3.11
-python@3.12
-python@3.8
+cask 'python' => '3.11'
+cask 'python' => '3.12'
+cask 'python' => '3.8'
 pyyaml
 readline
 ripgrep
