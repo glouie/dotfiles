@@ -156,11 +156,6 @@ if ! type "zsh" > /dev/null; then
     echo "Logout and Log back in."
 fi
 
-# Check to see that we are using the right zsh.
-if [ ! `which zsh` = "$HOMEBREW_REPOSITORY"/bin/zsh ]; then
-    echo "Note: you are not using the homebrew zsh"
-fi
-
 # Install Oh My ZSH
 # https://github.com/ohmyzsh/ohmyzsh#manual-installation
 #
