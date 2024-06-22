@@ -818,3 +818,5 @@ p10k_colors () {
 # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 [ -f "$HOME"/.fzf.zsh ] && source "$HOME"/.fzf.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
