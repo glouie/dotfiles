@@ -111,6 +111,7 @@ alias suidocs='chrome https://splunkui.splunkeng.com/'
 
 alias show_remap='nvim $HOME/.config/nvim/lua/glouie/remap.lua'
 
+export HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew
 # eval "$(brew shellenv)"
 eval $("$HOMEBREW_REPOSITORY"/bin/brew shellenv)
 
@@ -812,3 +813,4 @@ p10k_colors () {
     done
 }
 
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
