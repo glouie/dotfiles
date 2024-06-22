@@ -1,23 +1,41 @@
 # config file for alacritty
 import = [
-    "~/.config/alacritty/themes/themes/coolnight.toml"
+    "~/.config/alacritty/themes/themes/catppuccin-macchiato.toml"
 ]
 
 [env]
-TERM = "xterm-256color"
+    TERM = "xterm-256color"
+    WININT_X11_SCALE_FACTOR = "1.0"
+
+[shell]
+    program = "zsh"
+    # args = ["-l", "welcome"]
+
 
 [window]
-padding.x = 10 
-padding.y = 10 
+    padding.x = 10 
+    padding.y = 10 
+    decorations = "Buttonless"
+    opacity = 0.7
+    blur = true
+    dynamic_title = true
+    resize_increments = true
+    option_as_alt = "Both"
 
-decoration = "Buttonless"
+[scrolling]
+    history = 10000
+    multiplier = 3
 
-opacity = 0.7
-blur = true
-
-option_as_alt = "Both"
 
 [font]
-normal.family = "FiraCode Nerd Font Mono"
+    normal.family = "FiraCode Nerd Font Mono"
+    size = 14
 
+[colors]
+
+[keyboard]
+    bindings = [
+        { key = "N", mods = "Control|Shift", action = "CreateNewWindow" },
+        { key = "L", mods = "Control|Shift", chars = "l" },
+    ]
 
