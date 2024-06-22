@@ -1,0 +1,23 @@
+# config file for alacritty
+import = [
+    "~/.config/alacritty/themes/themes/coolnight.toml"
+]
+
+[env]
+TERM = "xterm-256color"
+
+[window]
+padding.x = 10 
+padding.y = 10 
+
+decoration = "Buttonless"
+
+opacity = 0.7
+blur = true
+
+option_as_alt = "Both"
+
+[font]
+normal.family = "FiraCode Nerd Font Mono"
+
+
