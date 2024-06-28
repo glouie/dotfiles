@@ -42,16 +42,22 @@ return {
         --   path = '~/vaults/personal',
         -- },
 
-        {
-          name = 'work',
-          -- path = '~/vaults/work',
-          path = '~/My Drive/Obsidian/Splunk',
-          -- Optional, override certain settings.
-          overrides = {
-            notes_subdir = 'notes',
-          },
-        },
-
+        -- {
+        --   name = 'work',
+        --   -- path = '~/vaults/work',
+        --   path = '~/My Drive/Obsidian/Splunk',
+        --   -- Optional, override certain settings.
+        --   overrides = {
+        --     -- notes_subdir = 'notes',
+        --     notes_subdir = vim.NIL,
+        --     new_notes_location = "current_dir",
+        --     templates = {
+        --       subdir = vim.NIL,
+        --     }
+        --
+        --   },
+        -- },
+        --
         {
           name = 'no-vault',
           path = function()

@@ -18,7 +18,7 @@ vim.keymap.set('n', '<C-p>', '<cmd>:FZF<CR>')
 
 -- easy split generation
 vim.keymap.set('n', '<leader>v', ':vsplit') -- space+v creates vertical split
-vim.keymap.set('n', '<leader>s', ':split')  -- space+s creates horizontal split
+vim.keymap.set('n', '<leader>s', ':split') -- space+s creates horizontal split
 
 -- -- easy split navigation
 -- vim.keymap.set('n', '<C-h>', '<C-w>h')       -- ctrl+h switches to left window
@@ -35,9 +35,9 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set('n', '<Tab>', ':bnext <CR>')                -- goes to next buffer(file)
-vim.keymap.set('n', '<S-Tab>', ':bprevious <CR>')          -- goes to previous buffer
-vim.keymap.set('n', '<leader>d', ':bd! <CR>')              -- delete the current buffer
+vim.keymap.set('n', '<Tab>', ':bnext <CR>') -- goes to next buffer(file)
+vim.keymap.set('n', '<S-Tab>', ':bprevious <CR>') -- goes to previous buffer
+vim.keymap.set('n', '<leader>d', ':bd! <CR>') -- delete the current buffer
 
 vim.keymap.set('n', '<C-Left>', ':vertical resize +3<CR>') -- resize vertical by 3
 vim.keymap.set('n', '<C-Right>', ':vertical resize -3<CR>')
@@ -51,8 +51,12 @@ vim.keymap.set('i', 'jk', '<ESC>')
 
 -- Visual Maps
 vim.keymap.set('v', '<leader>r', '"hy:%s/<C-r>h//g<left><left>') -- find and replace
-vim.keymap.set('v', '<C-s>', ':sort<CR>')                        -- sort highlighted lines
-vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")                     -- move current line up
-vim.keymap.set('v', 'K', ":m '>-2<CR>gv=gv")                     -- move current line down
+vim.keymap.set('v', '<C-s>', ':sort<CR>') -- sort highlighted lines
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv") -- move current line up
+vim.keymap.set('v', 'K', ":m '>-2<CR>gv=gv") -- move current line down
+
+-- navigation
+vim.keymap.set('n', 'B', '^', { noremap = false })
+vim.keymap.set('n', 'E', '$', { noremap = false })
 
 return {}
