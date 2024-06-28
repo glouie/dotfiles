@@ -31,7 +31,6 @@ echo "Running 'chezmoi $*'" >&2
 exec "$chezmoi" init --apply glouie
 
 # install homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/glouie/dotfiles/main/install.sh)"
-
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 # install Brewfile
 brew bundle install
