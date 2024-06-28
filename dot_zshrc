@@ -738,8 +738,8 @@ if ! type "eza" > /dev/null; then
         echo "Can't install eza, because homebrew is not installed."
     fi
 else
-    alias ls='eza'
-    alias ll='eza -alh'
+    alias ls='eza --icons'
+    alias ll='eza -1GlTahx -L 1'
     alias tree='eza --tree'
 fi
 
