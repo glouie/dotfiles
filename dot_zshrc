@@ -1,6 +1,11 @@
-POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+# zsh config 
+
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+
+############## powerlevel10k ###################
+
+POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -8,6 +13,17 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+p10k_colors () {
+
+    for i in {0..255}; 
+    do 
+        print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; 
+    done
+}
+
+################################################
 
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -92,24 +108,29 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 
+################## Aliases ######################
 # Aliases
-alias ls='ls --color'
+alias envs='env | grep -i'
 
 alias zshrc='source $HOME/.zshrc'
 alias reload='source $HOME/.zshrc'
 alias editrc='nvim $HOME/.zshrc'
 
 alias ls='ls -GFhsh'
+alias ll='ls -lah'
+
 alias mkdir='mkdir -p'
 alias distro='cat /etc/*-release'
 alias myip='curl http://ipecho.net/plain; echo'
-alias zshconfig='subl $HOME/.zshrc'
 
 alias server='python -m SimpleHTTPServer 8000'
 alias npmhelp='chrome https://github.com/robbyrussell/oh-my-zsh/tree/master/plugins/npm'
-alias suidocs='chrome https://splunkui.splunkeng.com/'
 
 alias show_remap='nvim $HOME/.config/nvim/lua/glouie/remap.lua'
+
+#################################################
+
+################## Homebrew #####################
 
 export HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew
 # eval "$(brew shellenv)"
@@ -119,15 +140,13 @@ export HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew
 
 [ -f /usr/local/bin/brew ] && eval $(/usr/local/bin/brew shellenv)
 
+# Install home brew if not found.
+if ! type "brew" > /dev/null; then
+    echo "brew was not found. Installing homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
 
-
-
-# Shell integrations
-eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd cd zsh)"
-
-
-######################## START ZSH ########################
+################### zsh #########################
 # install brew:
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 #
@@ -139,12 +158,6 @@ eval "$(zoxide init --cmd cd zsh)"
 #
 # Change the default shell
 # chsh -s /usr/local/bin/zsh
-
-# Install home brew if not found.
-if ! type "brew" > /dev/null; then
-    echo "brew was not found. Installing homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
 
 # Install omg zsh from homebrew to use. Instead of the default zsh.
 if ! type "zsh" > /dev/null; then
@@ -165,8 +178,9 @@ fi
 # source $ZSH/oh-my-zsh.sh
 #
 
-########################  END ZSH  ########################
+#################################################
 
+################### Orca ########################
 
 #<!-- START ORCA ALIAS -->
 unalias orca 2>/dev/null
@@ -286,9 +300,9 @@ update_orca_alias() {
 update_orca_nfr_license() {
     curl -L -o $HOME/.orca/nfr_enterprise.lic http://go.splunk.com/splunk-nfr-license
 };
-#<!-- END ORCA ALIAS -->
+#################################################
 
-###### Start Virtualenv #########
+################### Virtualenv ##################
 
 # Get Virtual Env
 if [[ $VIRTUAL_ENV != "" ]]
@@ -302,19 +316,7 @@ else
     venv=''
 fi
 
-alias splunkqa='deactivate; source $HOME/.zshrc; source $HOME/venv/splunkqa/bin/activate; export REPO=$HOME/gitlab/main/qa; cdr'
-alias minnow='deactivate; source $HOME/.zshrc; source $HOME/venv/minnow/bin/activate; export REPO=$HOME/gitlab/minnow; cdr'
-alias htmlwd='deactivate; source $HOME/.zshrc; source $HOME/venv/htmlwd/bin/activate; export REPO=$HOME/gitlab/html-webdriver; cdr'
-alias dataanalysis='deactivate; source $HOME/.zshrc; source $HOME/venv/dataanalysis/bin/activate; export REPO=$HOME/gitlab/data-analysis; cdr; export TEST_DIR=$REPO/test/ui'
-alias sui='deactivate; source $HOME/.zshrc; source $HOME/venv/splunkui/bin/activate; export REPO=$HOME/gitlab/splunk-ui-test-functional; cdr; export TEST_DIR=$REPO'
-
-alias pipi='pip3.8 install -i https://repo.splunkdev.ne/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple'
-# alias pipi='pip3.8 install -i https://repo.splunk.com/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple'
-alias pip-uninstall-all='pip3.8 freeze | grep -v "^-e" | grep -v "@" | xargs pip3.8 uninstall -y'
-alias pip='pip3.8'
-
-alias cleansplunkqa='deactivate; virtualenv --clear $HOME/venv/splunkqa; splunkqa; cd $HOME/gitlab/main/qa/new_test; pip install -U pip; pip install -r requirements.txt; pip install bpython pylint; setupcushy; export REPO=$HOME/gitlab/main/qa; cdr'
-
+alias py='/usr/bin/python'
 
 if [ ! -d "$HOME/venv" ]; then
     mkdir -p "$(dirname $HOME/venv)"
@@ -332,14 +334,15 @@ venv() {
     source "$HOME"/.bashrc
 }
 
-####### End Virtualenv ##########
+#################################################
 
-########## pytest ############
+################### Pytest ######################
 # export PYTEST_ADDOPTS="-x --index-wait=0 --browser=chrome"
 # export PYTEST_ADDOPTS="-x --browser=chrome"
 
+#################################################
 
-########### .BASHRC ##########
+################### Splunk ######################
 
 export ORIG_PATH=$PATH
 export PATH_HISTORY=$PWD
@@ -398,19 +401,12 @@ cd_git(){
 }
 
 alias setcurrent='setupenv current'
-alias cds='cdr; cd $HOME/gitlab/main/qa/new_test'
-alias cdg='cd_git'
-alias cdl='cds; cd lib/'
+alias cdr='cd $REPO'
+alias cds='cd $HOME/gitlab/main/qa/new_test'
 alias cdh='cd_splunk_home'
 alias cdm='cd $HOME/gitlab/main'
-alias cdwd='cds; cd tests/web/webdriver'
-alias cdr='cd $REPO'
-
-alias cd='savepath;cd'
-alias cdb='pop_savepath;cd $PREV_PATH;pop_savepath'
-
-alias bashrc='. $HOME/.bashrc'
-alias ll='ls -lah'
+alias cdl='cdr; cd new_test/lib'
+alias cdt='cdr; cd new_test/tests'
 
 alias splunkstart='$SPLUNK_HOME/bin/splunk start --accept-license --answer-yes'
 alias splunksearch='$SPLUNK_HOME/bin/splunk search -auth admin:changeme'
@@ -418,110 +414,30 @@ alias splunkhome='echo $SPLUNK_HOME'
 alias splunk='$SPLUNK_HOME/bin/splunk'
 alias splunkstatus='$SPLUNK_HOME/bin/splunk status; $SPLUNK_HOME/bin/splunk show splunkd-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show web-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show kvstore-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show kvstore-status -auth "admin:changeme"'
 alias splunkloglevel='splunk show log-level -auth "admin:changeme" | grep -i -A 1'
+alias splunkinfo='echo "SPLUNK_HOME: $SPLUNK_HOME"; splunk status --accept-license; echo "SPLUNK_SRC: $SPLUNK_SRC"; echo "PYTHONPATH: $PYTHONPATH"'
+alias rest='curl -k -u admin:changeme -X '
 
-splunkseedpasswd(){
-    echo "Setting up admin:changeme user..."
-    echo "[user_info]\nUSERNAME = admin\nPASSWORD=changeme\n" > "$SPLUNK_HOME"/etc/system/local/user-seed.conf
-}
+alias splunkqa='deactivate; source $HOME/.zshrc; source $HOME/venv/splunkqa/bin/activate; export REPO=$HOME/gitlab/main/qa; cdr'
+alias htmlwd='deactivate; source $HOME/.zshrc; source $HOME/venv/htmlwd/bin/activate; export REPO=$HOME/gitlab/html-webdriver; cdr'
+alias sui='deactivate; source $HOME/.zshrc; source $HOME/venv/splunkui/bin/activate; export REPO=$HOME/gitlab/splunk-ui-test-functional; cdr; export TEST_DIR=$REPO'
+alias pipi='pip3.8 install -i https://repo.splunkdev.net/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple'
+# alias pipi='pip3.8 install -i https://repo.splunk.com/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple'
+alias pip-uninstall-all='pip3.8 freeze | grep -v "^-e" | grep -v "@" | xargs pip3.8 uninstall -y'
+alias pip='pip3.8'
 
+alias cleansplunkqa='deactivate; virtualenv --clear $HOME/venv/splunkqa; splunkqa; cd $HOME/gitlab/main/qa/new_test; pip install -U pip; pip install -r requirements.txt; pip install bpython pylint; setupcushy; export REPO=$HOME/gitlab/main/qa; cdr'
 
-savepath(){
-    export PATH_HISTORY="$PWD"':'"$PATH_HISTORY"
-    #echo $PATH_HISTORY
-}
-
-pwdh(){
-    echo "$PATH_HISTORY"
-}
-
-pop_savepath(){
-    export PREV_PATH=$(echo "$PATH_HISTORY" | cut -d ':' -f 1)
-    export PATH_HISTORY=$(echo "$PATH_HISTORY" | cut -d ':' -f 2-)
-}
-
-############## Grep #################
-
-# GREP_OPTIONS='--color=auto'
-# GREP_COLORS='30;43'
-alias grep='grep --color=auto'
-# alias rgrep='grep --color=auto -ir'
-
-############## Echo #################
-
-alias envs='env | grep -i'
-
-############## ssh ##################
+# ssh to remove dev boxes
 alias ronnie='ssh glouie@ronnie'
 alias wimpy='ssh glouie@wimpy'
 alias mrt='ssh glouie@mtr'
 alias jenkinsbox='ssh -L 5902:localhost:5902 glouie@qa-jenk-debugging-glouie.sv.splunk.com'
 
 
-sendsshkey(){
-
-    # note: for it to work you need to make sure perms are right.
-    # $ chmod 700 $HOME/.ssh
-    # $ chmod 600 $HOME/.ssh/authorized_keys
-
-    if (( "$#" < "1" ));
-    then
-        echo "** Usage: sendsshkey user@hostname"
-        return 1
-    fi
-    cat "$HOME"/.ssh/id_rsa.pub | ssh "$1" 'cat >> $HOME/.ssh/authorized_keys'
+splunkseedpasswd(){
+    echo "Setting up admin:changeme user..."
+    echo "[user_info]\nUSERNAME = admin\nPASSWORD=changeme\n" > "$SPLUNK_HOME"/etc/system/local/user-seed.conf
 }
-
-
-############## splunk ##################
-
-alias cdl='cdr; cd new_test/lib'
-alias cdt='cdr; cd new_test/tests'
-
-############## misc #################
-
-alias py='/usr/bin/python'
-alias rest='curl -k -u admin:changeme -X '
-alias rmcasper='sudo /usr/sbin/jamf removeFramework'
-
-
-# for osx: ex. fnr *.py s/this/that/g
-alias fnr='find . -type f -name "{1}" -exec sed -i "" {2} {} +'
-
-
-############# csv #################
-#!/bin/bash 
-function printcsv()
-{
-    awk -F, '{for (i=1;i<=NF;++i) {if (NR>1) val[i] = "$i"; else key[i] = "$i"}} END {for (j=1;j<i;++j) printf("%2d%30s = %s\\n", j, key[j], val[j])}' "$1"
-}
-
-############# misc ################
-
-# https://www.sublimetext.com/docs/3/osx_command_line.html
-alias subl='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -a'
-alias opensubldir='open $HOME/Library/Application\ Support/Sublime\ Text\ 3/Packages/User/'
-alias splinfo='echo "SPLUNK_HOME: $SPLUNK_HOME"; splunk status --accept-license; echo "SPLUNK_SRC: $SPLUNK_SRC"; echo "PYTHONPATH: $PYTHONPATH"'
-
-# VLESS=$(find /usr/local/bin/nvim -name 'less.sh')
-# if [ -n "$VLESS" ]; then
-#     alias less="$VLESS"
-# fi
-# export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
-export LESS=" -R"
-
-
-alias vim='nvim'
-alias vi='nvim'
-
-alias rmpyc='find . -name "*.pyc" -print0 | xargs -0 rm'
-alias rmlog='find . -name "*.log" -print0 | xargs -0 rm'
-alias rmhtml='find . -name "*.html" -print0 | xargs -0 rm'
-alias rmxml='find . -name "*.xml" -print0 | xargs -0 rm'
-alias rmpng='find . -name "screenshot*.png" -print0 | xargs -0 rm'
-alias rmeggs='find . -name "*.egg-info" -print0 | xargs -0 rm -rf'
-alias rmtestlogs='rmpyc;rmlog;rmhtml;rmxml;rmpng'
-
-alias pyl='pylint -d "C0103,R0902,R0904,R0801,C0302,W0105,R0913"'
 
 function get_running_splunk_home(){
     process_num=$(ps ax | grep splunkd | grep -v "process-runner" | grep start | awk '{print $1}')
@@ -545,82 +461,15 @@ restartsplunk(){
     "$splhome"/bin/splunk restart
 }
 
-############## git ###############
+#################################################
 
-function gitcreatebranch(){
+################### webpages ####################
 
-    if (( "$#" < "2" ));
-    then
-        echo "** Usage: gitcreatebranch <new_branch> <upstream_branch>"
-        return 1
-    fi
-
-    git checkout -b "$1"
-    git push -u origin "$1"
-    git branch --set-upstream-to="$2" "$1"
-}
-
-alias ga='git add'
-alias gc='git commit'
-alias gd='git diff'
-alias gs='git status'
-alias gps='git push'
-alias gpl='git pull'
-
-########## LazyGit ###############
-#
-alias lg='lazygit'
-#
-##################################
-
-######### pycharm ###############
-
-alias pycharm='/usr/local/bin/charm'
-
-######### shortcuts ###############
+alias suidocs='chrome https://splunkui.splunkeng.com/'
 alias wtf='open https://confluence.splunk.com/display/PROD/Webdriver+Test+Framework'
-# alias jenkin='open https://apps-jenkins.sv.splunk.com/'
-# alias jira='open https://jira.splunk.com/browse/'  # use the jira() instead
 alias mainrepo='open https://git.splunk.com/projects/SPLCORE/repos/main/qa/browse'
 alias okta='open https://splunk.okta.com'
-# alias releases='open https://releases.sv.splunk.com'
 
-######## jedi #################
-alias installjedivim='cd $HOME/.vim/bundle/ && git clone --recursive https://github.com/davidhalter/jedi-vim.git'
-alias installjedi='pip install jedi'
-
-####### vundle ###############
-alias installvundle='git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim'
-
-####### isplunk ##############
-# alias isplunk='cat > /tmp/isplunk.input && isplunk_main -f /tmp/isplunk.input'
-
-
-####### cushion ##############
-# to use backend team cache build server.
-# export SPLUNK_CACHED_BUILDS_SERVER=http://health.sv.splunk.com:8080
-
-
-####### massdrop keyboard ########
-# usage: masskbupdate massdrop_ctrl_config_ctrl__default_6087.bin
-#
-# you will need the mdloader_mac executable
-# download here: https://github.com/Massdrop/mdloader/releases
-#
-# configure keyboard keys here:
-#   https://drop.com/mechanical-keyboards/configurator/
-#
-# TODO: turn this alias to functions, aliases can't use positional params. 
-# alias masskbupdate='./mdloader_mac --first --download $1 restart'
-
-# alias samantha='bpython -i ids.py'
-
-####### datf ##############
-alias datf='py.test --browser=chrome --html=report.html  --self-contained-html --deployment-type S1 --infra-type=ucp --local-instance --check-crash-logs --action-on-crash=stop --check-splunk-logs'
-alias datfrm='py.test --browser=chrome --html=report.html  --self-contained-html --deployment-type S1 --infra-type=ucp --local-instance --diag --check-crash-logs --action-on-crash=stop --check-splunk-logs'
-alias datfhl='py.test --browser=chrome --html=report.html  --self-contained-html --chrome-options="--headless" --deployment-type S1 --infra-type=ucp --local-instance --diag --check-crash-logs --action-on-crash=stop --check-splunk-logs'
-
-####### open ##############
 function flakyfe () {
     # usage: flakyfe test_something
     open "https://go/flaky-fe/$1"
@@ -653,14 +502,205 @@ function chrome () {
     /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome "$1"
 }
 
+#################################################
+
+################### DATF ########################
+
+alias datf='py.test --browser=chrome --html=report.html  --self-contained-html --deployment-type S1 --infra-type=ucp --local-instance --check-crash-logs --action-on-crash=stop --check-splunk-logs'
+alias datfrm='py.test --browser=chrome --html=report.html  --self-contained-html --deployment-type S1 --infra-type=ucp --local-instance --diag --check-crash-logs --action-on-crash=stop --check-splunk-logs'
+alias datfhl='py.test --browser=chrome --html=report.html  --self-contained-html --chrome-options="--headless" --deployment-type S1 --infra-type=ucp --local-instance --diag --check-crash-logs --action-on-crash=stop --check-splunk-logs'
+
+#################################################
+
+################### path history ################
+
+savepath(){
+    export PATH_HISTORY="$PWD"':'"$PATH_HISTORY"
+    #echo $PATH_HISTORY
+}
+
+pwdh(){
+    echo "$PATH_HISTORY"
+}
+
+pop_savepath(){
+    export PREV_PATH=$(echo "$PATH_HISTORY" | cut -d ':' -f 1)
+    export PATH_HISTORY=$(echo "$PATH_HISTORY" | cut -d ':' -f 2-)
+}
+
+alias cd='savepath;cd'
+alias cdb='pop_savepath;cd $PREV_PATH;pop_savepath'
+
+################### Grep ########################
+
+# GREP_OPTIONS='--color=auto'
+# GREP_COLORS='30;43'
+alias grep='grep --color=auto'
+# alias rgrep='grep --color=auto -ir'
+
+#################################################
+
+################### SSH #########################
+
+sendsshkey(){
+
+    # note: for it to work you need to make sure perms are right.
+    # $ chmod 700 $HOME/.ssh
+    # $ chmod 600 $HOME/.ssh/authorized_keys
+
+    if (( "$#" < "1" ));
+    then
+        echo "** Usage: sendsshkey user@hostname"
+        return 1
+    fi
+    cat "$HOME"/.ssh/id_rsa.pub | ssh "$1" 'cat >> $HOME/.ssh/authorized_keys'
+}
+
+#################################################
+
+################### misc ########################
+
+# remove jamf (no longer possible)
+alias rmcasper='sudo /usr/sbin/jamf removeFramework'
+
+# for osx: ex. fnr *.py s/this/that/g
+alias fnr='find . -type f -name "{1}" -exec sed -i "" {2} {} +'
+
+# pretty print csv as a table.
+function printcsv()
+{
+    awk -F, '{for (i=1;i<=NF;++i) {if (NR>1) val[i] = "$i"; else key[i] = "$i"}} END {for (j=1;j<i;++j) printf("%2d%30s = %s\\n", j, key[j], val[j])}' "$1"
+}
+
+#################################################
+
+################### sublime #####################
+#
+# https://www.sublimetext.com/docs/3/osx_command_line.html
+
+alias subl='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -a'
+alias opensubldir='open $HOME/Library/Application\ Support/Sublime\ Text\ 3/Packages/User/'
+
+#################################################
+
+# VLESS=$(find /usr/local/bin/nvim -name 'less.sh')
+# if [ -n "$VLESS" ]; then
+#     alias less="$VLESS"
+# fi
+# export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+export LESS=" -R"
+
+alias vim='nvim'
+alias vi='nvim'
+
+alias rmpyc='find . -name "*.pyc" -print0 | xargs -0 rm'
+alias rmlog='find . -name "*.log" -print0 | xargs -0 rm'
+alias rmhtml='find . -name "*.html" -print0 | xargs -0 rm'
+alias rmxml='find . -name "*.xml" -print0 | xargs -0 rm'
+alias rmpng='find . -name "screenshot*.png" -print0 | xargs -0 rm'
+alias rmeggs='find . -name "*.egg-info" -print0 | xargs -0 rm -rf'
+alias rmtestlogs='rmpyc;rmlog;rmhtml;rmxml;rmpng'
+
+alias pyl='pylint -d "C0103,R0902,R0904,R0801,C0302,W0105,R0913"'
+
+#################################################
+
+################### Git #########################
+
+function gitcreatebranch(){
+
+    if (( "$#" < "2" ));
+    then
+        echo "** Usage: gitcreatebranch <new_branch> <upstream_branch>"
+        return 1
+    fi
+
+    git checkout -b "$1"
+    git push -u origin "$1"
+    git branch --set-upstream-to="$2" "$1"
+}
+
+alias ga="git add"   
+alias gc="git commit -m"
+alias gca="git commit -a -m"
+alias gd="git diff"  
+alias gca="git checkout"
+alias gs="git status"
+alias gps="git push"  
+alias gpl="git pull"  
+alias gb="git branch"
+alias gba="git branch -a"
+alias gadd="git add"
+alias ga="git add -p"
+alias gcoall="git checkout -- ."
+alias gr="git remote"
+alias gre="git reset"
+
+#################################################
+
+################### Docker ######################
+
+# Docker
+alias dco="docker compose"
+alias dps="docker ps"
+alias dpa="docker ps -a"
+alias dl="docker ps -l -q"
+alias dx="docker exec -it"
+
+# Dirs
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+
+################### LazyGit #####################
+
+alias lg='lazygit'
+
+#################################################
+
+################### PyCharm #####################
+
+alias pycharm='/usr/local/bin/charm'
+
+################### Jedi ########################
+
+alias installjedivim='cd $HOME/.vim/bundle/ && git clone --recursive https://github.com/davidhalter/jedi-vim.git'
+alias installjedi='pip install jedi'
+
+#################################################
+
+################### Vundle ######################
+
+alias installvundle='git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim'
+
+#################################################
+
+################### drop keyboard ###############
+# usage: masskbupdate massdrop_ctrl_config_ctrl__default_6087.bin
+#
+# you will need the mdloader_mac executable
+# download here: https://github.com/Massdrop/mdloader/releases
+#
+# configure keyboard keys here:
+#   https://drop.com/mechanical-keyboards/configurator/
+#
+# TODO: turn this alias to functions, aliases can't use positional params. 
+# alias masskbupdate='./mdloader_mac --first --download $1 restart'
+
+# alias samantha='bpython -i ids.py'
+
+#################################################
+
+################### NVM #########################
 # NVM (Node Version Manager)
 # Install: 
 # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -f "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
-
-alias pjson='python -m json.tool'
+alias prjson='python -m json.tool'
 
 # TODO: fixme, i don't work in zsh
 # function pj () {
@@ -672,13 +712,14 @@ alias pjson='python -m json.tool'
 #     python -c"$PYCMD"
 # }
 
-# ################### Glab ########################
+#################################################
+
+################### GitLab ######################
+
 # install: brew install glab
 # https://glab.readthedocs.io/en/latest/intro.html
 # https://github.com/profclems/glab#installation
 
-
-####### gitlab #######
 export GITLAB_TOKEN=
 export GITLAB_FEED_TOKEN=
 export GITLAB_PERSONAL_TOKEN=
@@ -687,8 +728,9 @@ export GITLAB_PERSONAL_TOKEN=
 
 alias mymrs='glab mr list --author=@me'
 
+#################################################
 
-################### vault #######################
+################### Vault #######################
 
 # https://developer.hashicorp.com/vault/downloads
 # https://developer.hashicorp.com/vault/tutorials/getting-started/getting-started-install
@@ -718,14 +760,23 @@ export VAULT_NAMESPACE=eeff/application
 [ -s "/Users/glouie/.scm_breeze/scm_breeze.sh" ] && source "/Users/glouie/.scm_breeze/scm_breeze.sh"
 
 #################################################
-# TODO: need to fix, doesn't work in zsh 
-# showcolors ()
-# {
-#     for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f" ${${(M)$((i%6)):#3}:+$'\n'}; done
-# }
+
+################### starship ####################
+
+if ! type "starship" > /dev/null; then
+    if type "brew" > /dev/null; then
+        brew install startship
+    else
+        echo "Can't install starship, because homebrew is not installed."
+    fi
+else
+    eval "$(starship init zsh)"
+    export STARSHIP_CONFIG="$HOME"/.config/starship/starship.toml
+fi
+
+#################################################
 
 alias lc='colorls -lA --sd'
-
 
 ################## eza ##########################
 # https://github.com/eza-community/eza?tab=readme-ov-file
@@ -776,7 +827,6 @@ fi
 
 ################################################
 
-
 ################# fzf ##########################
 # fzf is a fuzzy finder tool.
 
@@ -786,10 +836,12 @@ if ! type "fzf" > /dev/null; then
     else
         echo "Can't install fzf, because homebrew is not installed."
     fi
+else
+    eval "$(fzf --zsh)"
+    [ -f "$HOME"/.fzf.zsh ] && source "$HOME"/.fzf.zsh
 fi
 
 ################################################
-
 
 ############## Zoxide ##########################
 # Zoxide is a cd alternative tool
@@ -806,23 +858,19 @@ fi
 
 ################################################
 
-[ -f "$HOME"/.fzf.zsh ] && source "$HOME"/.fzf.zsh
-
+################### powerlevel10k ##############
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-p10k_colors () {
-
-    for i in {0..255}; 
-    do 
-        print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; 
-    done
-}
-
-# eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-[ -f "$HOME"/.fzf.zsh ] && source "$HOME"/.fzf.zsh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#
+# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+#
+# p10k_colors () {
+#
+#     for i in {0..255}; 
+#     do 
+#         print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; 
+#     done
+# }
+#
+################################################
 
 set -o vi
