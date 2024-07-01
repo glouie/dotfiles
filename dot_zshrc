@@ -873,4 +873,26 @@ fi
 #
 ################################################
 
+################### Yazi #######################
+
+# Yazi is a terminal file manager.
+
+if ! type "yazi" > /dev/null; then
+    if type "brew" > /dev/null; then
+        brew install yazi ffmpegthumbnailer unar jq poppler fd ripgrep fzf zoxide font-symbols-only-nerd-font
+    else
+        echo "Can't install yazi, because homebrew is not installed."
+    fi
+else
+    function yy() {
+        yazi "$@" --cwd-file="$tmp"
+        local tmp="$(mktemp -t "yazi-cwd")"
+        if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+            cd -- "$cwd"
+        fi
+        rm -f -- "$tmp"
+    }
+fi
+
+################################################
 set -o vi
