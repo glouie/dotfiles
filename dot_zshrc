@@ -765,7 +765,7 @@ export VAULT_NAMESPACE=eeff/application
 
 if ! type "starship" > /dev/null; then
     if type "brew" > /dev/null; then
-        brew install startship
+        brew install starship
     else
         echo "Can't install starship, because homebrew is not installed."
     fi
