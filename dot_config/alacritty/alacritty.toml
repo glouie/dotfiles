@@ -9,7 +9,7 @@ import = [
 
 [shell]
     program = "zsh"
-    # args = ["-l", "welcome"]
+    args = ["--login", "-c", "tmux attach || tmux"]
 
 
 [window]
