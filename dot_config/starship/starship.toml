@@ -9,8 +9,8 @@ right_format = """$all"""
 command_timeout = 1000
 
 [directory.substitutions]
-'~/tests/starship-custom' = 'work-project'
-disabled = true
+'~/learning' = 'learn'
+disabled = false
 
 [git_branch]
 format =  '[$symbol$branch(:$remote_branch)]($style)'
