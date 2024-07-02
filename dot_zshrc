@@ -879,7 +879,7 @@ fi
 
 if ! type "yazi" > /dev/null; then
     if type "brew" > /dev/null; then
-        brew install yazi ffmpegthumbnailer unar jq poppler fd ripgrep fzf zoxide font-symbols-only-nerd-font
+        brew install yazi ffmpegthumbnailer unar jq poppler fd ripgrep fzf zoxide  # font-symbols-only-nerd-font
     else
         echo "Can't install yazi, because homebrew is not installed."
     fi
