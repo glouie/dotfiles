@@ -896,3 +896,10 @@ fi
 
 ################################################
 set -o vi
+
+################### Atuin ######################
+# Install: curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
+################################################
