@@ -531,3 +531,12 @@ function pj () {
 [ -s "/Users/glouie/.scm_breeze/scm_breeze.sh" ] && source "/Users/glouie/.scm_breeze/scm_breeze.sh"
 
 [ -f ~/.fzf.bash ] && source $HOME/.fzf.bash
+
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+
+################### Atuin ######################
+# Install: curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
+################################################
