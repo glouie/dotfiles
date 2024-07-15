@@ -3,7 +3,7 @@ return {
 	-- color_scheme = 'termnial.sexy',
 	color_scheme = "Catppuccin Mocha",
 	enable_tab_bar = false,
-	font_size = 16.0,
+	font_size = 14.0,
 	-- font = wezterm.font('JetBrains Mono'),
 	font = wezterm.font("FiraCode Nerd Font Mono"),
 	-- macos_window_background_blur = 40,
@@ -35,4 +35,6 @@ return {
 			action = wezterm.action.OpenLinkAtMouseCursor,
 		},
 	},
+
+	audible_bell = "Disabled",
 }
