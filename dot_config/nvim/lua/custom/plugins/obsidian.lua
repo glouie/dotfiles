@@ -81,22 +81,22 @@ return {
       -- dir = "~/vaults/work",
 
       -- Optional, if you keep notes in a specific subdirectory of your vault.
-      notes_subdir = 'notes',
+      -- notes_subdir = 'notes',
 
       -- Optional, set the log level for obsidian.nvim. This is an integer corresponding to one of the log
       -- levels defined by "vim.log.levels.*".
       log_level = vim.log.levels.INFO,
 
-      daily_notes = {
-        -- Optional, if you keep daily notes in a separate directory.
-        folder = 'notes/dailies',
-        -- Optional, if you want to change the date format for the ID of daily notes.
-        date_format = '%Y-%m-%d',
-        -- Optional, if you want to change the date format of the default alias of daily notes.
-        alias_format = '%B %-d, %Y',
-        -- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
-        template = nil,
-      },
+      -- daily_notes = {
+      --   -- Optional, if you keep daily notes in a separate directory.
+      --   folder = 'notes/dailies',
+      --   -- Optional, if you want to change the date format for the ID of daily notes.
+      --   date_format = '%Y-%m-%d',
+      --   -- Optional, if you want to change the date format of the default alias of daily notes.
+      --   alias_format = '%B %-d, %Y',
+      --   -- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
+      --   template = nil,
+      -- },
 
       -- Optional, completion of wiki links, local markdown links, and tags using nvim-cmp.
       completion = {
@@ -267,7 +267,7 @@ return {
       -- Optional, configure additional syntax highlighting / extmarks.
       -- This requires you have `conceallevel` set to 1 or 2. See `:help conceallevel` for more details.
       ui = {
-        enable = true,         -- set to false to disable all additional syntax features
+        enable = true, -- set to false to disable all additional syntax features
         update_debounce = 200, -- update delay after a text change (in milliseconds)
         -- Define how various check-boxes are displayed
         checkboxes = {
