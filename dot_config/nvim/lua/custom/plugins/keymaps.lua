@@ -59,7 +59,8 @@ map('i', '<C-k>', '<Up>', { desc = 'move up' })
 
 map('n', '<Esc>', '<cmd>noh<CR>', { desc = 'general clear highlights' })
 
-map('n', '<C-s>', '<cmd>w<CR>', { desc = 'file save' })
+map('n', '<C-s>', '<Esc><cmd>w<CR>', { desc = 'file save' })
+map('i', '<C-s>', '<Esc><cmd>w<CR>', { desc = 'file save' })
 map('n', '<C-c>f', '<cmd>%y+<CR>', { desc = 'file copy whole' })
 
 -- global lsp mappings

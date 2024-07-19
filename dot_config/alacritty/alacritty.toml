@@ -42,3 +42,8 @@ import = [
         { key = "L", mods = "Control|Shift", chars = "l" },
     ]
 
+[bell]
+    # command = { program = "osascript", args = ["-e", "beep"] }
+    command = "None"
+
+    
