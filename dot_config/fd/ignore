@@ -1,0 +1,25 @@
+# custom ignore file for fd
+
+# for MacOS
+.DS_store
+.AppleDouble
+.LSOverride
+
+# for Python
+__pycache__
+.pyc
+
+# for Git
+.git
+.github
+.gitignore
+
+# for VSCode
+.localhistory
+
+
+# dependency packages
+node_modules/
+jspm_packages/
+site_packages/
+
