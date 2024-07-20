@@ -802,12 +802,14 @@ fi
 if ! type "bat" > /dev/null; then
     if type "brew" > /dev/null; then
         brew install bat
+        bat cache build
     else
         echo "Can't install bat, because homebrew is not installed."
     fi
 else
-    alias less='bat'
-    alias cat='bat -p'
+    export BAT_THEME="Catppuccin Mocha"
+    alias less='bat --color=always'
+    alias cat='bat --color=always'
 fi
 
 #################################################
@@ -839,6 +841,28 @@ if ! type "fzf" > /dev/null; then
 else
     eval "$(fzf --zsh)"
     [ -f "$HOME"/.fzf.zsh ] && source "$HOME"/.fzf.zsh
+    
+    export FZF_DEFAULT_OPTS="
+    --preview-window=right,70% 
+    --preview 
+    '([[ -f {} ]] && (bat --color=always {} || cat {} )) ||
+     ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
+    
+    "
+    # Use the CLI find to get all files, excluding any filepath
+    # containing the string "git".
+    # export FZF_DEFAULT_COMMAND='find . -type f ! -path "*git*"'
+
+    # Use the CLI fd to respect ignore files (like '.gitignore'),
+    # display hidden files, and exclude the '.git' directory.
+    export FZF_DEFAULT_COMMAND='fd . --hidden'
+
+    # Use the CLI ripgrep to respect ignore files (like '.gitignore'),
+    # display hidden files, and exclude the '.git' directory.
+    # export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
+    op(){
+        nvim $(fzf)
+    }
 fi
 
 ################################################
