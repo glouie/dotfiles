@@ -928,7 +928,6 @@ else
 fi
 
 ################################################
-set -o vi
 
 ################### Atuin ######################
 # Install: curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
@@ -936,3 +935,40 @@ set -o vi
 
 eval "$(atuin init zsh)"
 ################################################
+
+################### Cheat.sh ###################
+# Installation instructions: 
+#
+# PATH_DIR="$HOME/bin"  # or another directory on your $PATH
+# mkdir -p "$PATH_DIR"
+# curl https://cht.sh/:cht.sh > "$PATH_DIR/cht.sh"
+# chmod +x "$PATH_DIR/cht.sh"
+# 
+# Global install: 
+#
+# curl -s https://cht.sh/:cht.sh | sudo tee /usr/local/bin/cht.sh && sudo chmod +x /usr/local/bin/cht.sh
+# 
+# install rlwrap, to run in shell mode:
+# sudo apt install rlwrap
+# brew install rlwrap
+#
+
+export PATH_DIR = "$HOME/bin"
+export CHTSH_CONF="$HOME/.cht.sh/cht.sh.conf"
+
+alias cht='cht.sh'
+
+# to activate tab completion for cht.sh 
+# 
+# curl https://cheat.sh/:zsh > ~/.zsh.d/_cht
+# echo 'fpath=(~/.zsh.d/ $fpath)' >> ~/.zshrc
+#
+# Open a new shell to load the plugin
+
+fpath=(~/.zsh.d/ $fpath)
+
+################################################
+
+set -o vi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
