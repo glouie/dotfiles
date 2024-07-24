@@ -112,9 +112,9 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # Aliases
 alias envs='env | grep -i'
 
-alias zshrc='source $HOME/.zshrc'
 alias reload='source $HOME/.zshrc'
 alias editrc='nvim $HOME/.zshrc'
+alias editnvim='nvim $HOME/.config/nvim'
 
 alias ls='ls -GFhsh'
 alias ll='ls -lah'
