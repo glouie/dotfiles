@@ -28,9 +28,17 @@ set -- init --apply --source="${script_dir}"
 echo "Running 'chezmoi $*'" >&2
 # exec: replace current process with chezmoi
 # exec "$chezmoi" "$@"
-exec "$chezmoi" init --apply glouie
+# exec "$chezmoi" init --apply glouie
+"$chezmoi" init --apply glouie
 
 # install homebrew
 echo | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 # install Brewfile
 brew bundle install
+
+# install fonts (need Nerd Fonts) 
+fc-cache -fv
+# list fonts
+fc-list 
+
+
