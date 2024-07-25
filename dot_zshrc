@@ -128,6 +128,13 @@ alias npmhelp='chrome https://github.com/robbyrussell/oh-my-zsh/tree/master/plug
 
 alias show_remap='nvim $HOME/.config/nvim/lua/glouie/remap.lua'
 
+alias pip='pip3'
+alias python='python3'
+
+alias cha='chezmoi add'
+alias chu='chezmoi update'
+alias chc='chezmoi cd'
+
 #################################################
 
 ################## Homebrew #####################
@@ -931,7 +938,9 @@ fi
 
 ################### Atuin ######################
 # Install: curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
-. "$HOME/.atuin/bin/env"
+if [[ -e "$HOME/.atium/bin/env" ]]; then
+    source "$HOME/.atuin/bin/env"
+fi
 
 eval "$(atuin init zsh)"
 ################################################
@@ -953,7 +962,7 @@ eval "$(atuin init zsh)"
 # brew install rlwrap
 #
 
-export PATH_DIR = "$HOME/bin"
+export PATH_DIR="$HOME/bin"
 export CHTSH_CONF="$HOME/.cht.sh/cht.sh.conf"
 
 alias cht='cht.sh'
