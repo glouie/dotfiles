@@ -18,7 +18,7 @@ map('n', '<C-p>', '<cmd>:FZF<CR>')
 
 -- easy split generation
 map('n', '<leader>v', ':vsplit') -- space+v creates vertical split
-map('n', '<leader>s', ':split')  -- space+s creates horizontal split
+map('n', '<leader>s', ':split') -- space+s creates horizontal split
 
 -- -- easy split navigation
 -- map('n', '<C-h>', '<C-w>h')       -- ctrl+h switches to left window
@@ -35,9 +35,9 @@ map('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 map('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 map('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-map('n', '<Tab>', ':bnext <CR>')                -- goes to next buffer(file)
-map('n', '<S-Tab>', ':bprevious <CR>')          -- goes to previous buffer
-map('n', '<leader>d', ':bd! <CR>')              -- delete the current buffer
+map('n', '<Tab>', ':bnext <CR>') -- goes to next buffer(file)
+map('n', '<S-Tab>', ':bprevious <CR>') -- goes to previous buffer
+map('n', '<leader>d', ':bd! <CR>') -- delete the current buffer
 
 map('n', '<C-Left>', ':vertical resize +3<CR>') -- resize vertical by 3
 map('n', '<C-Right>', ':vertical resize -3<CR>')
@@ -82,20 +82,10 @@ map('n', '<leader>gt', '<cmd>Telescope git_status<CR>', { desc = 'telescope git 
 map('n', '<leader>pt', '<cmd>Telescope terms<CR>', { desc = 'telescope pick hidden term' })
 map('n', '<leader>th', '<cmd>Telescope themes<CR>', { desc = 'telescope nvchad themes' })
 map('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { desc = 'telescope find files' })
-map('n', '<leader>fa', '<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>',
-  { desc = 'telescope find all files' })
+map('n', '<leader>fa', '<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>', { desc = 'telescope find all files' })
 
 -- terminal
 map('t', '<C-x>', '<C-\\><C-N>', { desc = 'terminal escape terminal mode' })
-
--- new terminals
-map('n', '<leader>h', function()
-  require('nvchad.term').new { pos = 'sp' }
-end, { desc = 'terminal new horizontal term' })
-
-map('n', '<leader>v', function()
-  require('nvchad.term').new { pos = 'vsp' }
-end, { desc = 'terminal new vertical window' })
 
 -- toggleable
 map({ 'n', 't' }, '<A-v>', function()
@@ -119,9 +109,9 @@ end, { desc = 'whichkey query lookup' })
 
 -- Visual Maps
 map('v', '<leader>r', '"hy:%s/<C-r>h//g<left><left>') -- find and replace
-map('v', '<C-s>', ':sort<CR>')                        -- sort highlighted lines
-map('v', 'J', ":m '>+1<CR>gv=gv")                     -- move current line up
-map('v', 'K', ":m '>-2<CR>gv=gv")                     -- move current line down
+map('v', '<C-s>', ':sort<CR>') -- sort highlighted lines
+map('v', 'J', ":m '>+1<CR>gv=gv") -- move current line up
+map('v', 'K', ":m '>-2<CR>gv=gv") -- move current line down
 
 -- navigation
 map('n', 'B', '^', { noremap = false })
