@@ -53,3 +53,14 @@ Ctrl-b "
 
 # To swap windows:
 Ctrl-b :swap-window -s [0-9] -t [0-9]
+
+# To enter into Copy mode and copy text. 
+#
+# Enter copy mode
+Ctrl-b [
+# Start selecting text
+Space
+# Copy the selected text
+Enter
+# To paste
+Ctrl-b ]

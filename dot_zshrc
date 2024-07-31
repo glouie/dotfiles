@@ -628,20 +628,20 @@ function gitcreatebranch(){
 }
 
 alias ga="git add"   
-alias gc="git commit -m"
-alias gca="git commit -a -m"
-alias gd="git diff"  
-alias gco="git checkout"
-alias gs="git status"
-alias gps="git push"  
-alias gpl="git pull"  
+alias ga="git add -p"
 alias gb="git branch"
 alias gba="git branch -a"
-alias gadd="git add"
-alias ga="git add -p"
+alias gc="git commit -m"
+alias gca="git commit -a -m"
+alias gcat="git cat-file -p"
+alias gco="git checkout"
 alias gcoall="git checkout -- ."
+alias gd="git diff"  
+alias gpl="git pull"  
+alias gps="git push"  
 alias gr="git remote"
 alias gre="git reset"
+alias gs="git status"
 
 #################################################
 
@@ -777,8 +777,8 @@ if ! type "starship" > /dev/null; then
         echo "Can't install starship, because homebrew is not installed."
     fi
 else
-    eval "$(starship init zsh)"
     export STARSHIP_CONFIG="$HOME"/.config/starship/starship.toml
+    eval "$(starship init zsh)"
 fi
 
 #################################################
@@ -809,7 +809,7 @@ fi
 if ! type "bat" > /dev/null; then
     if type "brew" > /dev/null; then
         brew install bat
-        bat cache build
+        bat cache --build
     else
         echo "Can't install bat, because homebrew is not installed."
     fi
@@ -942,7 +942,15 @@ if [[ -e "$HOME/.atium/bin/env" ]]; then
     source "$HOME/.atuin/bin/env"
 fi
 
-eval "$(atuin init zsh)"
+if ! type "atuin" > /dev/null; then
+    if type "brew" > /dev/null; then
+        brew install atuin
+    else
+        echo "Can't install atuin, because homebrew is not installed."
+    fi
+else
+    eval "$(atuin init zsh)"
+fi
 ################################################
 
 ################### Cheat.sh ###################
