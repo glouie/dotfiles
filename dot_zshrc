@@ -989,3 +989,7 @@ fpath=(~/.zsh.d/ $fpath)
 set -o vi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# orca aliases 
+[[ -r ~/.orca_profile]] && . ~/.orca_profile
+
