@@ -196,6 +196,7 @@ export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 # Splunk environment variables
 
 [[ -r ~/.splunk_profile ]] && . ~/.splunk_profile
+[[ -r ~/.bash_profile ]] && . ~/.bash_profile
 export PATH=$PATH:/Applications/splunk
 #export PYTHONPATH=$SPLUNK_SRC/test/lib/pytest/plugin
 
@@ -540,3 +541,5 @@ function pj () {
 
 eval "$(atuin init zsh)"
 ################################################
+
+[[ -r ~/.orca_profile]] && . ~/.orca_profile
