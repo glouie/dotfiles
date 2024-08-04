@@ -76,7 +76,7 @@ autoload -U compinit && compinit -u
 zinit cdreplay -q
 
 # History
-HISTSIZE=5000
+HISTSIZE=10000
 HISTFILE="$HOME/.zsh_history"
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
