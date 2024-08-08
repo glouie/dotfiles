@@ -1,4 +1,5 @@
 -- None-ls
+-- Use Neovim as a language server to inject LSP diagnostics, code actions, and more via Lua.
 
 return {
     'nvimtools/none-ls.nvim',
@@ -18,6 +19,6 @@ return {
             },
         }
 
-        vim.keymap.set('n', '<leader>gf', vim.lsp.buf.format, {})
+        vim.keymap.set('n', '<leader>fm', vim.lsp.buf.format, { desc = 'Auto Format' })
     end,
 }

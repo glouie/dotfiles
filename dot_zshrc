@@ -116,6 +116,8 @@ alias reload='source $HOME/.zshrc'
 alias editrc='nvim $HOME/.zshrc'
 alias editnvim='nvim $HOME/.config/nvim'
 
+alias tm='tmux attach || tmux'
+
 alias ls='ls -GFhsh'
 alias ll='ls -lah'
 

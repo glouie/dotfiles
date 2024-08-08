@@ -152,6 +152,9 @@ git reset --hard origin/master
 # the top of the incoming commits:
 git pull <remote> <branch> --rebase
 
+# to set --rebase flag as a default config
+git config --add --global pull.rebase true
+
 # To update all submodules:
 git submodule update --init --recursive
 
