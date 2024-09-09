@@ -932,37 +932,39 @@ function zoxide_load(){
 }
 
 function brew_install_apps() {
-    echo "\$#: $#" 
-    echo "\$@: $@" 
-    echo "Attempting to install apps via brew..."
+    # echo "\$#: $#" 
+    # echo "\$@: $@" 
+    # echo "Attempting to install apps via brew..."
     if [ "$#" -eq 0 ]; then
-        echo "No list of apps were provided."
-        APP=$APP_LIST
-        APP=("${APP_LIST[@]}")
+        # echo "No app list was provided."
+        # echo "Using default list. "
+        # echo "Default list: $DEFAULT_APP_LIST"
+        # APP=$APP_LIST
+        APP=("${DEFAULT_APP_LIST[@]}")
     else
-        echo "Using default list. "
+        # echo "App list was provided."
         APP=("${@[@]}")
     fi
 
-    echo "APP is $APP"
+    # echo "APP is $APP"
 
     for app in $APP;
     do 
-        echo "Checking $app"
+        echo "Checking for '$app'..."
         if ! type "$app" > /dev/null; then
-            echo "$app is not installed yet on this system."
-            echo "Attempting to install $app..."
+            echo "'$app' is not installed yet on this system."
+            echo "Attempting to install '$app'..."
             if type "brew" > /dev/null; then
-                echo "Installing $app with brew."
+                echo "Installing '$app' with homebrew."
                 brew install "$app"
                 load_cmd="$app"_load
                 # echo "Load config $load_cmd."
                 "$load_cmd"
             else
-                echo "Can't install $app, because homebrew is not installed."
+                echo "Can't install '$app', because homebrew is not installed."
             fi
         else
-            echo "$app is already installed"
+            echo "'$app' is already installed"
             load_cmd="$app"_load
             # echo "Load config $load_cmd."
             "$load_cmd"
