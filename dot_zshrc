@@ -821,15 +821,21 @@ if type "rg" > /dev/null; then
     alias ripgrep="rg"
 fi
 
+if type "cargo" > /dev/null; then
+    alias rust="cargo"
+fi
+
+
 export DEFAULT_APP_LIST=( 
     "atuin" 
     "bat" 
-    "cargo" 
+    # "cargo" 
     "direnv" 
     "eza" 
     "fzf" 
     "htop" 
     "ripgrep" 
+    "rust"
     "starship" 
     "yazi" 
     "zoxide" 
@@ -853,7 +859,8 @@ function bat_load() {
     alias cat='bat --color=always'
 }
 
-function cargo_load() {
+# function cargo_load() {
+function rust_load() {
     export PATH="$HOME/.cargo/bin:$PATH"
 }
 
@@ -931,6 +938,17 @@ function zoxide_load(){
     eval "$(zoxide init --cmd cd zsh)"
 }
 
+function load_app_settings() {
+    # just load the app settings 
+    for app in $APP;
+    do 
+        load_cmd="$app"_load
+        # echo "Load config $load_cmd."
+        "$load_cmd"
+    done
+}
+
+
 function brew_install_apps() {
     # echo "\$#: $#" 
     # echo "\$@: $@" 
@@ -950,10 +968,10 @@ function brew_install_apps() {
 
     for app in $APP;
     do 
-        echo "Checking for '$app'..."
+        # echo "Checking for '$app'..."
         if ! type "$app" > /dev/null; then
-            echo "'$app' is not installed yet on this system."
-            echo "Attempting to install '$app'..."
+            # echo "'$app' is not installed yet on this system."
+            # echo "Attempting to install '$app'..."
             if type "brew" > /dev/null; then
                 echo "Installing '$app' with homebrew."
                 brew install "$app"
@@ -964,15 +982,27 @@ function brew_install_apps() {
                 echo "Can't install '$app', because homebrew is not installed."
             fi
         else
-            echo "'$app' is already installed"
+            # echo "'$app' is already installed"
             load_cmd="$app"_load
             # echo "Load config $load_cmd."
             "$load_cmd"
         fi
     done
-    echo "Done with installing brew apps."
+    # echo "Done with installing brew apps."
 }
 
-brew_install_apps
+# brew_install_apps
+load_app_settings
+
+unset ripgrep
+unset rust
+
 ################################################
+
+alias covidmac='ssh glouie@192.168.68.85'
+
+if type "pfetch" > /dev/null; then 
+    source ~/.pfetch
+    pfetch
+fi
 
