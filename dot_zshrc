@@ -1001,8 +1001,14 @@ unset rust
 
 alias covidmac='ssh glouie@192.168.68.85'
 
+
+function obsidian () {
+     /Applications/Obsidian.app/Contents/MacOS/Obsidian &
+}
+
 if type "pfetch" > /dev/null; then 
     source ~/.pfetch
     pfetch
 fi
+
 
