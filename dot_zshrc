@@ -940,7 +940,7 @@ function zoxide_load(){
 
 function load_app_settings() {
     # just load the app settings 
-    for app in $APP;
+    for app in $DEFAULT_APP_LIST;
     do 
         load_cmd="$app"_load
         # echo "Load config $load_cmd."
