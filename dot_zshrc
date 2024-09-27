@@ -15,7 +15,7 @@ fi
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-p10k_colors () {
+function p10k_colors () {
 
     for i in {0..255}; 
     do 
@@ -197,7 +197,7 @@ unalias orca_ssh 2>/dev/null
 unalias orca_dev 2>/dev/null
 unalias orca_debug_sh 2>/dev/null
 
-latest_check() {
+function latest_check() {
        # 1st argument is the repo to compare against, dev or prod
         repotarget=""
         shorttarget=""
@@ -248,7 +248,7 @@ latest_check() {
         fi
 };
 
-orca() {
+function orca() {
     latest_check
     docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
         -v /var/run/docker.sock:/var/run/docker.sock \
@@ -258,7 +258,7 @@ orca() {
         "$@"
 };
 
-orca_ssh() {
+function orca_ssh() {
     latest_check
     docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
         -v /var/run/docker.sock:/var/run/docker.sock \
@@ -269,7 +269,7 @@ orca_ssh() {
         "$@"
 };
 
-orca_dev() {
+function orca_dev() {
     latest_check dev
     docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
         -v /var/run/docker.sock:/var/run/docker.sock \
@@ -279,7 +279,7 @@ orca_dev() {
         "$@"
 };
 
-orca_debug_sh() {
+function orca_debug_sh() {
     latest_check
     docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
         -v /var/run/docker.sock:/var/run/docker.sock \
@@ -290,7 +290,7 @@ orca_debug_sh() {
         "$@"
 };
 
-orca_beta() {
+function orca_beta() {
     latest_check
     docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
         -v /var/run/docker.sock:/var/run/docker.sock \
@@ -300,13 +300,13 @@ orca_beta() {
         "$@"
 };
 
-update_orca_alias() {
+function update_orca_alias() {
     sed -i '' '/#<!-- START ORCA ALIAS -->/,/#<!-- END ORCA ALIAS -->\n/d' $HOME/.zshrc
     curl -s https://repo.splunk.com/artifactory/Solutions/Common/misc/orca_zsh.sh >> $HOME/.zshrc
     echo "Please run 'source $HOME/.zshrc' or restart your shell."
 };
 
-update_orca_nfr_license() {
+function update_orca_nfr_license() {
     curl -L -o $HOME/.orca/nfr_enterprise.lic http://go.splunk.com/splunk-nfr-license
 };
 #################################################
@@ -331,7 +331,7 @@ if [ ! -d "$HOME/venv" ]; then
     mkdir -p "$(dirname $HOME/venv)"
 fi
 
-venv() {
+function venv() {
 
     if (( "$#" < "1" ));
     then
@@ -397,15 +397,15 @@ export PATH=$PATH:$HOME/bin/
 # PYTHON STARTUP for autocompletion and history.
 export PYTHONSTARTUP=$HOME/.pystartup
 
-cd_splunk_src(){
+function cd_splunk_src(){
     cd "$SPLUNK_SRC"/"$1" || return
 }
 
-cd_splunk_home(){
+function cd_splunk_home(){
     cd "$SPLUNK_HOME"/"$1" || return
 }
 
-cd_git(){
+function cd_git(){
     cd "$GIT_HOME"/"$1" || return
 }
 
@@ -443,7 +443,7 @@ alias mrt='ssh glouie@mtr'
 alias jenkinsbox='ssh -L 5902:localhost:5902 glouie@qa-jenk-debugging-glouie.sv.splunk.com'
 
 
-splunkseedpasswd(){
+function splunkseedpasswd(){
     echo "Setting up admin:changeme user..."
     echo "[user_info]\nUSERNAME = admin\nPASSWORD=changeme\n" > "$SPLUNK_HOME"/etc/system/local/user-seed.conf
 }
@@ -455,17 +455,17 @@ function get_running_splunk_home(){
 
 }
 
-set2runningsplunk(){
+function set2runningsplunk(){
     splhome=$(get_running_splunk_home)
     export SPLUNK_HOME=$splhome
 }
 
-stopsplunk(){
+function stopsplunk(){
     splhome=$(get_running_splunk_home)
     "$splhome"/bin/splunk stop
 }
 
-restartsplunk(){
+function restartsplunk(){
     splhome=$(get_running_splunk_home)
     "$splhome"/bin/splunk restart
 }
@@ -523,16 +523,16 @@ alias datfhl='py.test --browser=chrome --html=report.html  --self-contained-html
 
 ################### path history ################
 
-savepath(){
+function savepath(){
     export PATH_HISTORY="$PWD"':'"$PATH_HISTORY"
     #echo $PATH_HISTORY
 }
 
-pwdh(){
+function pwdh(){
     echo "$PATH_HISTORY"
 }
 
-pop_savepath(){
+function pop_savepath(){
     export PREV_PATH=$(echo "$PATH_HISTORY" | cut -d ':' -f 1)
     export PATH_HISTORY=$(echo "$PATH_HISTORY" | cut -d ':' -f 2-)
 }
@@ -551,7 +551,7 @@ alias grep='grep --color=auto'
 
 ################### SSH #########################
 
-sendsshkey(){
+function sendsshkey(){
 
     # note: for it to work you need to make sure perms are right.
     # $ chmod 700 $HOME/.ssh
