@@ -15,7 +15,7 @@ fi
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-function p10k_colors () {
+p10k_colors () {
 
     for i in {0..255}; 
     do 
@@ -189,128 +189,6 @@ fi
 
 #################################################
 
-################### Orca ########################
-
-#<!-- START ORCA ALIAS -->
-unalias orca 2>/dev/null
-unalias orca_ssh 2>/dev/null
-unalias orca_dev 2>/dev/null
-unalias orca_debug_sh 2>/dev/null
-
-function latest_check() {
-       # 1st argument is the repo to compare against, dev or prod
-        repotarget=""
-        shorttarget=""
-        if [ "$1" = "dev" ]; then
-          repotarget="repo.splunk.com/splunk/products/orca/branches/develop"
-          shorttarget="splunk/products/orca/branches/develop"
-        else
-          repotarget="repo.splunk.com/splunk/products/orca"
-          shorttarget="splunk/products/orca "
-        fi
-        fulltarget=$repotarget":latest"
-        LOCAL_SHA=$(docker images --digests | grep "${repotarget}\s" | grep latest | awk -F' ' '{print$3}')
-        REMOTE=$(ping -c 1 -t 3 repo.splunk.com 2>/dev/null)
-        if [[ "$REMOTE" = *"0 packets received"* || "$REMOTE" = *"Unknown host"* || "$REMOTE" = "" ]]; then
-          echo Connection to repo.splunk.com failed! Unable to check 'latest' image version.
-        else
-          command='curl -s "https://repo.splunk.com/artifactory/ui/views/dockerv2" -XPOST -H "Content-Type: application/json;charset=UTF-8" -H "Request-Agent: artifactoryUI" --data-binary '\''{"view":"dockerv2","repoKey":"docker-solutions-local","path":"'$shorttarget"/latest"'"}'\'' | python -c "from __future__ import print_function; import sys, json; print (json.load(sys.stdin)['\''tagInfo'\'']['\''digest'\''])"'
-           REMOTE_SHA=$(eval $command)
-           if [ "$LOCAL_SHA" != "$REMOTE_SHA" ]; then
-             while true; do
-               read "yn?There is a new version available for ORCA. Would you like to upgrade? [y/n] "
-                 case $yn in
-                   [Yy]* ) docker pull $fulltarget;
-                           if [ $? -eq 0 ]; then
-                                echo "Your local 'latest' ORCA image is up to date!";
-                            else
-                                echo "Error pulling 'latest' ORCA image";
-                            fi
-                     break;;
-                   [Nn]* ) break;;
-                   * ) echo 'Please enter yes or no.';;
-                 esac
-             done
-             while true; do
-               read "yn?Do you wish to remove old ORCA images? [y/n] "
-                 case $yn in
-                   [Yy]* ) docker images | grep $repotarget | awk -F' ' '{print$3}' | tail -n+4 | xargs docker rmi -f
-                     echo "All ORCA images except the latest 3 have been removed!";
-                     echo "Kept images:";
-                     docker images | grep $repotarget;
-                     echo;
-                     break;;
-                   [Nn]* ) break;;
-                   * ) echo 'Please enter yes or no.';;
-                 esac
-              done
-           fi
-        fi
-};
-
-function orca() {
-    latest_check
-    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v $HOME/.orca:/root/.orca \
-        -v $HOME/.docker:/root/.docker \
-        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:latest \
-        "$@"
-};
-
-function orca_ssh() {
-    latest_check
-    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v $HOME/.orca:/root/.orca \
-        -v $HOME/.ssh:/root/.ssh \
-        -v $HOME/.docker:/root/.docker \
-        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:latest \
-        "$@"
-};
-
-function orca_dev() {
-    latest_check dev
-    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v $HOME/.orca:/root/.orca \
-        -v $HOME/.docker:/root/.docker \
-        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca/branches/develop:latest \
-        "$@"
-};
-
-function orca_debug_sh() {
-    latest_check
-    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v $HOME/.orca:/root/.orca \
-        -v $HOME/.docker:/root/.docker \
-        --entrypoint /bin/sh \
-        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:latest \
-        "$@"
-};
-
-function orca_beta() {
-    latest_check
-    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v $HOME/.orca:/root/.orca \
-        -v $HOME/.docker:/root/.docker \
-        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:beta \
-        "$@"
-};
-
-function update_orca_alias() {
-    sed -i '' '/#<!-- START ORCA ALIAS -->/,/#<!-- END ORCA ALIAS -->\n/d' $HOME/.zshrc
-    curl -s https://repo.splunk.com/artifactory/Solutions/Common/misc/orca_zsh.sh >> $HOME/.zshrc
-    echo "Please run 'source $HOME/.zshrc' or restart your shell."
-};
-
-function update_orca_nfr_license() {
-    curl -L -o $HOME/.orca/nfr_enterprise.lic http://go.splunk.com/splunk-nfr-license
-};
-#################################################
-
 ################### Virtualenv ##################
 
 # Get Virtual Env
@@ -321,7 +199,6 @@ then
     venv="::${VIRTUAL_ENV##*/}:: "
 else
     # In case you don't have one activated
-    alias pipi='pip3.8 install -i https://repo.splunk.com/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple'
     venv=''
 fi
 
@@ -331,7 +208,7 @@ if [ ! -d "$HOME/venv" ]; then
     mkdir -p "$(dirname $HOME/venv)"
 fi
 
-function venv() {
+venv() {
 
     if (( "$#" < "1" ));
     then
@@ -351,14 +228,12 @@ function venv() {
 
 #################################################
 
-################### Splunk ######################
+################### jjddVjj
 
 export ORIG_PATH=$PATH
 export PATH_HISTORY=$PWD
 export PKG_HOME=$HOME/pkg
 export GIT_HOME=$HOME/gitlab
-export TEST_DIR=$GIT_HOME/qa/new_test
-export SPLUNK_SRC=$GIT_HOME/qa
 
 if [[ -z "$HOSTNAME" ]]
 then
@@ -378,18 +253,10 @@ export SAUCE_API_KEY=
 
 export PATH=$PATH:$HOME/bin/synergy/
 
-# Splunk Perforce alias
-
-# source $HOME/.p4env
-# alias p4='p4 login -s &> /dev/null || echo $P4PASSWD | p4 login &> /dev/null; p4 $*'
-
 # MacPorts path variable
 
 export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 
-
-# Splunk environment variables
-[[ -r "$HOME"/.splunk_profile ]] && . "$HOME"/.splunk_profile
 
 # My own bin directory for scripts, etc.
 export PATH=$PATH:$HOME/bin/
@@ -397,114 +264,18 @@ export PATH=$PATH:$HOME/bin/
 # PYTHON STARTUP for autocompletion and history.
 export PYTHONSTARTUP=$HOME/.pystartup
 
-function cd_splunk_src(){
-    cd "$SPLUNK_SRC"/"$1" || return
-}
 
-function cd_splunk_home(){
-    cd "$SPLUNK_HOME"/"$1" || return
-}
 
-function cd_git(){
+cd_git(){
     cd "$GIT_HOME"/"$1" || return
 }
 
-alias setcurrent='setupenv current'
-alias cdr='cd $REPO'
-alias cds='cd $HOME/gitlab/main/qa/new_test'
-alias cdh='cd_splunk_home'
-alias cdm='cd $HOME/gitlab/main'
-alias cdl='cdr; cd new_test/lib'
-alias cdt='cdr; cd new_test/tests'
-
-alias splunkstart='$SPLUNK_HOME/bin/splunk start --accept-license --answer-yes'
-alias splunksearch='$SPLUNK_HOME/bin/splunk search -auth admin:changeme'
-alias splunkhome='echo $SPLUNK_HOME'
-alias splunk='$SPLUNK_HOME/bin/splunk'
-alias splunkstatus='$SPLUNK_HOME/bin/splunk status; $SPLUNK_HOME/bin/splunk show splunkd-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show web-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show kvstore-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show kvstore-status -auth "admin:changeme"'
-alias splunkloglevel='splunk show log-level -auth "admin:changeme" | grep -i -A 1'
-alias splunkinfo='echo "SPLUNK_HOME: $SPLUNK_HOME"; splunk status --accept-license; echo "SPLUNK_SRC: $SPLUNK_SRC"; echo "PYTHONPATH: $PYTHONPATH"'
-alias rest='curl -k -u admin:changeme -X '
-
-alias splunkqa='deactivate; source $HOME/.zshrc; source $HOME/venv/splunkqa/bin/activate; export REPO=$HOME/gitlab/main/qa; cdr'
-alias htmlwd='deactivate; source $HOME/.zshrc; source $HOME/venv/htmlwd/bin/activate; export REPO=$HOME/gitlab/html-webdriver; cdr'
-alias sui='deactivate; source $HOME/.zshrc; source $HOME/venv/splunkui/bin/activate; export REPO=$HOME/gitlab/splunk-ui-test-functional; cdr; export TEST_DIR=$REPO'
-alias pipi='pip3.8 install -i https://repo.splunkdev.net/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple'
-# alias pipi='pip3.8 install -i https://repo.splunk.com/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple'
 alias pip-uninstall-all='pip3.8 freeze | grep -v "^-e" | grep -v "@" | xargs pip3.8 uninstall -y'
 alias pip='pip3.8'
-
-alias cleansplunkqa='deactivate; virtualenv --clear $HOME/venv/splunkqa; splunkqa; cd $HOME/gitlab/main/qa/new_test; pip install -U pip; pip install -r requirements.txt; pip install bpython pylint; setupcushy; export REPO=$HOME/gitlab/main/qa; cdr'
-
-# ssh to remove dev boxes
-alias ronnie='ssh glouie@ronnie'
-alias wimpy='ssh glouie@wimpy'
-alias mrt='ssh glouie@mtr'
-alias jenkinsbox='ssh -L 5902:localhost:5902 glouie@qa-jenk-debugging-glouie.sv.splunk.com'
-
-
-function splunkseedpasswd(){
-    echo "Setting up admin:changeme user..."
-    echo "[user_info]\nUSERNAME = admin\nPASSWORD=changeme\n" > "$SPLUNK_HOME"/etc/system/local/user-seed.conf
-}
-
-function get_running_splunk_home(){
-    process_num=$(ps ax | grep splunkd | grep -v "process-runner" | grep start | awk '{print $1}')
-    spl_home=$(ps -E -ww -p "$process_num" | awk -F "SPLUNK_HOME=" '{print $2}' | awk -F " " '{print $1}')
-    echo "${spl_home//[$'\t\r\n']}"
-
-}
-
-function set2runningsplunk(){
-    splhome=$(get_running_splunk_home)
-    export SPLUNK_HOME=$splhome
-}
-
-function stopsplunk(){
-    splhome=$(get_running_splunk_home)
-    "$splhome"/bin/splunk stop
-}
-
-function restartsplunk(){
-    splhome=$(get_running_splunk_home)
-    "$splhome"/bin/splunk restart
-}
 
 #################################################
 
 ################### webpages ####################
-
-alias suidocs='chrome https://splunkui.splunkeng.com/'
-alias wtf='open https://confluence.splunk.com/display/PROD/Webdriver+Test+Framework'
-alias mainrepo='open https://git.splunk.com/projects/SPLCORE/repos/main/qa/browse'
-alias okta='open https://splunk.okta.com'
-
-function flakyfe () {
-    # usage: flakyfe test_something
-    open "https://go/flaky-fe/$1"
-}
-
-function flakybe () {
-    # usage: flakybe test_something
-    open "https://go/flaky-be/$1"
-}
-
-function jira () {
-    # usage: jira spl-12345
-    open "https://splunk.atlassian.net/secure/QuickSearch.jspa?searchString=$1"
-}
-
-function gitlab () {
-    # usage: gitlab hello
-    open "https://cd.splunkdev.com/search?search=$1"
-}
-
-function splmain () {
-    # usage: splmain hello
-    # project id 7712 is "main"
-    # group id 3228 is "Splunk Core aka splcore"
-    open "https://cd.splunkdev.com/search?group_id=3228&project_id=7712&search=$1"
-}
 
 function chrome () {
     # chrome <page>
@@ -513,26 +284,18 @@ function chrome () {
 
 #################################################
 
-################### DATF ########################
-
-alias datf='py.test --browser=chrome --html=report.html  --self-contained-html --deployment-type S1 --infra-type=ucp --local-instance --check-crash-logs --action-on-crash=stop --check-splunk-logs'
-alias datfrm='py.test --browser=chrome --html=report.html  --self-contained-html --deployment-type S1 --infra-type=ucp --local-instance --diag --check-crash-logs --action-on-crash=stop --check-splunk-logs'
-alias datfhl='py.test --browser=chrome --html=report.html  --self-contained-html --chrome-options="--headless" --deployment-type S1 --infra-type=ucp --local-instance --diag --check-crash-logs --action-on-crash=stop --check-splunk-logs'
-
-#################################################
-
 ################### path history ################
 
-function savepath(){
+savepath(){
     export PATH_HISTORY="$PWD"':'"$PATH_HISTORY"
     #echo $PATH_HISTORY
 }
 
-function pwdh(){
+pwdh(){
     echo "$PATH_HISTORY"
 }
 
-function pop_savepath(){
+pop_savepath(){
     export PREV_PATH=$(echo "$PATH_HISTORY" | cut -d ':' -f 1)
     export PATH_HISTORY=$(echo "$PATH_HISTORY" | cut -d ':' -f 2-)
 }
@@ -551,7 +314,7 @@ alias grep='grep --color=auto'
 
 ################### SSH #########################
 
-function sendsshkey(){
+sendsshkey(){
 
     # note: for it to work you need to make sure perms are right.
     # $ chmod 700 $HOME/.ssh
@@ -734,33 +497,8 @@ export GITLAB_TOKEN=
 export GITLAB_FEED_TOKEN=
 export GITLAB_PERSONAL_TOKEN=
 [[ -f "$HOME"/.gitlab_cred ]] && . "$HOME"/.gitlab_cred
-# glab auth login --hostname cd.splunkdev.com --token $GITLAB_TOKEN
 
 alias mymrs='glab mr list --author=@me'
-
-#################################################
-
-################### Vault #######################
-
-# https://developer.hashicorp.com/vault/downloads
-# https://developer.hashicorp.com/vault/tutorials/getting-started/getting-started-install
-#
-# To install
-# brew tap hashicorp/tap
-# brew install hashicorp/tap/vault
-
-# To update
-# brew upgrade hashicorp/tap/vault
-
-export VAULT_ADDR=https://secrets.splunkit.io
-export VAULT_NAMESPACE=eeff
-# vault login -method=okta username=<USERNAME> (without @splunk.com. Example: psahasrabudhe)
-
-# Enter password and Complete Okta MFA
-
-export VAULT_NAMESPACE=eeff/application
-# vault kv list kv_co2_stg
-# vault kv get kv_co2_stg/svc-eecq-co2-stg  ---→ store this key on your local machine ( preferably under $HOME/.ssh/id_rsa and change key permissions: chmod 600 <KEY_PATH>)
 
 #################################################
 

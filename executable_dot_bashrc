@@ -1,0 +1,545 @@
+# If not running interactively, don't do anything
+[[ $- == *i* ]] || return
+
+
+######## colors #############
+
+# Color Code me Bro
+RED='\[\033[31m\]'
+TURQUOIS='\[\033[36m\]'
+BLUE='\[\033[34m\]'
+YELLOW='\[\033[33m\]'
+GREEN='\[\033[32m\]'
+RESET='\[\033[0m\]'
+
+# define colors
+C_DEFAULT="\[\033[m\]"
+C_WHITE="\[\033[1m\]"
+C_BLACK="\[\033[30m\]"
+C_RED="\[\033[31m\]"
+C_GREEN="\[\033[32m\]"
+C_YELLOW="\[\033[33m\]"
+C_BLUE="\[\033[34m\]"
+C_PURPLE="\[\033[35m\]"
+C_CYAN="\[\033[36m\]"
+C_LIGHTGRAY="\[\033[37m\]"
+C_DARKGRAY="\[\033[1;30m\]"
+C_LIGHTRED="\[\033[1;31m\]"
+C_LIGHTGREEN="\[\033[1;32m\]"
+C_LIGHTYELLOW="\[\033[1;33m\]"
+C_LIGHTBLUE="\[\033[1;34m\]"
+C_LIGHTPURPLE="\[\033[1;35m\]"
+C_LIGHTCYAN="\[\033[1;36m\]"
+C_BG_BLACK="\[\033[40m\]"
+C_BG_RED="\[\033[41m\]"
+C_BG_GREEN="\[\033[42m\]"
+C_BG_YELLOW="\[\033[43m\]"
+C_BG_BLUE="\[\033[44m\]"
+C_BG_PURPLE="\[\033[45m\]"
+C_BG_CYAN="\[\033[46m\]"
+C_BG_LIGHTGRAY="\[\033[47m\]"
+
+
+
+######### LSCOLOR ############
+
+# LSCOLORS needs 11 sets of letters indicating foreground and background colors:
+
+# 1.  directory
+# 2.  symbolic link
+# 3.  socket
+# 4.  pipe
+# 5.  executable
+# 6.  block special
+# 7.  character special
+# 8.  executable with setuid bit set
+# 9.  executable with setgid bit set
+# 10. directory writable to others, with sticky bit
+# 11. directory writable to others, without sticky bit
+
+# The possible letters to use are:
+
+# a black
+# b red
+# c green
+# d brown
+# e blue
+# f magenta
+# c cyan
+# h light grey
+# A block black, usually shows up as dark grey
+# B bold red
+# C bold green
+# D bold brown, usually shows up as yellow
+# E bold blue
+# F bold magenta
+# G bold cyan
+# H bold light grey; looks like bright white
+# x default foreground or background
+
+export CLICOLOR=1
+export LSCOLORS=ExFxCxDxBxegedabagacad
+
+# alias ls='ls -GFlash'
+alias ls='ls -GFhsh'
+
+
+############## Prompt ###############
+
+export PS1="[$C_LIGHTCYAN\d \t$RESET]\n$C_LIGHTBLUE\H$RESET:$C_LIGHTYELLOW\W$RESET $C_LIGHTGREEN\u$RESET $C_LIGHTRED$venv$RESET\$ "
+
+
+###### #virtual env #########
+
+
+# Get Virtual Env
+if [[ $VIRTUAL_ENV != "" ]]
+then
+    # Strip out the path and just leave the env name
+    # venv="${RED}(${VIRTUAL_ENV##*/})$ORIGINAL"
+    venv="::${VIRTUAL_ENV##*/}:: "
+else
+    # In case you don't have one activated
+    venv=''
+fi
+
+alias splunkqa='deactivate; source ~/venv/splunkqa/bin/activate; source ~/.bashrc; export REPO=$HOME/gitlab/main/qa; cdr'
+alias minnow='deactivate; source ~/venv/minnow/bin/activate; source ~/.bashrc; export REPO=$HOME/gitlab/minnow; cdr'
+alias htmlwd='deactivate; source ~/venv/htmlwd/bin/activate; source ~/.bashrc; export REPO=$HOME/gitlab/html-webdriver; cdr'
+alias dataanalysis='deactivate; source ~/venv/dataanalysis/bin/activate; source ~/.bashrc; export REPO=$HOME/gitlab/data-analysis; cdr; export TEST_DIR=$REPO/test/ui'
+alias sui='deactivate; source ~/venv/splunkui/bin/activate; source ~/.bashrc; export REPO=$HOME/gitlab/splunk-ui-test-functional; cdr; export TEST_DIR=$REPO'
+
+alias pipi='pip install -i https://repo.splunk.com/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple'
+
+alias cleansplunkqa='deactivate; virtualenv --clear $HOME/venv/splunkqa; splunkqa; cd $HOME/gitlab/main/qa/new_test; pip install -U pip; pip install -r requirements.txt; pip install bpython pylint; setupcushy; export REPO=$HOME/gitlab/main/qa; cdr'
+
+venv() {
+
+    if (( "$#" < "1" ));
+    then
+        echo "** Usage: venv <virtualenv name>"
+        return 1
+    fi
+
+    source $HOME/venv/$1/bin/activate
+    source $HOME/.bashrc
+}
+
+# alias tree='ls -R | grep ":" | sed -e \'s/://\' -e \'s/[^-][^\/]*\//--/g\' -e \'s/^/   /\' -e \'s/-/|/\''
+# ls -R | grep ":" | sed -e 's/://' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+
+######### brew tools #########
+# $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+# $ brew install git
+# $ brew install bash-completion
+# $ brew install bash-git-prompt
+
+if [ -f `brew --prefix`/etc/bash_completion ]
+then
+    source `brew --prefix`/etc/bash_completion
+fi
+
+
+######### .git tools #########
+
+[[ -r ~/.git-completion.bash ]] && . ~/.git-completion.bash
+
+# if [ -f "$(brew --prefix bash-git-prompt)/share/gitprompt.sh" ]
+# then
+#     GIT_PROMPT_THEME=Default
+#     source "$(brew --prefix bash-git-prompt)/share/gitprompt.sh"
+# fi
+
+export GIT_EDITOR=vim
+
+######### OPENSSL #########
+export PATH=/usr/local/opt/openssl/bin:$PATH
+
+
+# $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+########## pytest ############
+# export PYTEST_ADDOPTS="-x --index-wait=0 --browser=chrome"
+# export PYTEST_ADDOPTS="-x --browser=chrome"
+
+########### .BASHRC ##########
+
+export ORIG_PATH=$PATH
+export PATH_HISTORY=$PWD
+export PKG_HOME=$HOME/pkg
+export GIT_HOME=$HOME/gitlab
+export TEST_DIR=$GIT_HOME/qa/new_test
+export SPLUNK_SRC=$GIT_HOME/qa
+hostname=$HOSTNAME
+export REPO=$GIT_HOME
+echo "hostname is: "$hostname
+
+# Sauce Labs
+# - either set or source a file containing the user and key
+export SAUCE_USER=
+export SAUCE_API_KEY=
+[[ -z ~/.sauce_labs ]] && . ~/.sauce_labs
+
+# Synergy path
+
+export PATH=$PATH:~/bin/synergy/
+
+# Splunk Perforce alias
+
+# source ~/.p4env
+# alias p4='p4 login -s &> /dev/null || echo $P4PASSWD | p4 login &> /dev/null; p4 $*'
+
+# MacPorts path variable
+
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+
+
+# Splunk environment variables
+
+[[ -r ~/.splunk_profile ]] && . ~/.splunk_profile
+[[ -r ~/.bash_profile ]] && . ~/.bash_profile
+export PATH=$PATH:/Applications/splunk
+#export PYTHONPATH=$SPLUNK_SRC/test/lib/pytest/plugin
+
+
+# My own bin directory for scripts, etc.
+
+export PATH=$PATH:~/bin/
+
+# PYTHON STARTUP for autocompletion and history.
+export PYTHONSTARTUP=$HOME/.pystartup
+
+cd_splunk_src(){
+    cd $SPLUNK_SRC/$1
+}
+
+cd_splunk_home(){
+    cd $SPLUNK_HOME/$1
+}
+
+cd_git(){
+    cd $GIT_HOME/$1
+}
+
+alias setcurrent='setupenv current'
+alias cds='cdr; cd qa/new_test'
+alias cdg='cd_git'
+alias cdl='cds; cd lib/'
+alias cdh='cd_splunk_home'
+alias cdm='cd ~/gitlab/main'
+alias cdwd='cds; cd tests/web/webdriver'
+alias cdr='cd $REPO'
+
+alias cd='savepath;cd'
+alias cdb='pop_savepath;cd $PREV_PATH;pop_savepath'
+
+alias bashrc='. ~/.bashrc'
+alias ll='ls -lah'
+
+alias splunkstart='$SPLUNK_HOME/bin/splunk start --accept-license --answer-yes'
+alias splunksearch='$SPLUNK_HOME/bin/splunk search -auth admin:changeme'
+alias splunkhome='echo $SPLUNK_HOME'
+alias splunk='$SPLUNK_HOME/bin/splunk'
+alias splunkstatus='$SPLUNK_HOME/bin/splunk status; $SPLUNK_HOME/bin/splunk show splunkd-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show web-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show kvstore-port -auth "admin:changeme"; $SPLUNK_HOME/bin/splunk show kvstore-status -auth "admin:changeme"'
+alias splunkloglevel='splunk show log-level -auth "admin:changeme" | grep -i -A 1'
+
+splunkseedpasswd(){
+    echo "Setting up admin:changeme user..."
+    echo "[user_info]\nUSERNAME = admin\nPASSWORD=changeme\n" > $SPLUNK_HOME/etc/system/local/user-seed.conf
+}
+
+
+# Adding ssh-agent
+
+# on local machine to start ssh-agent: nohup ssh-agent -s > ~/.ssh-agent
+# . ~/.ssh-agent
+
+
+# serving the pydoc on local machine,
+alias doc='splunk cmd /Users/glouie/build/current/lib/python2.6/pydoc.py -p 8080 &'
+
+savepath(){
+    export PATH_HISTORY=$PWD':'$PATH_HISTORY
+    #echo $PATH_HISTORY
+}
+
+pwdh(){
+    echo $PATH_HISTORY
+}
+
+pop_savepath(){
+    export PREV_PATH=`echo $PATH_HISTORY | cut -d ':' -f 1`
+    export PATH_HISTORY=`echo $PATH_HISTORY | cut -d ':' -f 2-`
+}
+
+############## Grep #################
+
+GREP_OPTIONS='--color=auto'
+GREP_COLORS='30;43'
+alias grep='grep --color=auto'
+alias rgrep='grep --color=auto -ir'
+
+############## Echo #################
+
+alias envs='env | grep -i'
+
+############## ssh ##################
+alias ronnie='ssh glouie@ronnie.ilo.sv.splunk.com'
+alias ronnie='ssh glouie@ronnie.ilo.sv.splunk.com'
+alias mrt='ssh glouie@mrt.ilo.sv.splunk.com'
+alias candyapple='ssh glouie@candyapple.sv.splunk.com'
+alias qapc='ssh qa@qa-ubuntu-pc.sv.splunk.com'
+alias jenkinsbox='ssh -L 5902:localhost:5902 glouie@qa-jenk-debugging-glouie.sv.splunk.com'
+alias gmac='ssh glouie@gmac.sv.splunk.com'
+alias guinness='ssh glouie-temp@guinness.webdev.splunk.com'
+
+function box(){
+    sshhost="glouie@glouie-box-"$1".sv.splunk.com"
+    echo "Trying to ssh into $sshhost ..."
+    ssh $sshhost
+}
+alias box1='box 001'
+alias box2='box 002'
+alias box3='box 003'
+alias box4='box 004'
+alias box5='box 005'
+alias box6='box 006'
+alias box7='box 007'
+alias box8='box 008'
+alias box9='box 009'
+alias box10='box 010'
+
+sendsshkey(){
+
+    # note: for it to work you need to make sure perms are right.
+    # $ chmod 700 ~/.ssh
+    # $ chmod 600 ~/.ssh/authorized_keys
+
+    if (( "$#" < "1" ));
+    then
+        echo "** Usage: sendsshkey user@hostname"
+        return 1
+    fi
+    cat ~/.ssh/id_rsa.pub | ssh $1 'cat >> ~/.ssh/authorized_keys'
+}
+
+
+############## splunk ##################
+
+alias cdl='cdr; cd new_test/lib'
+alias cdt='cdr; cd new_test/tests'
+
+############## misc #################
+
+alias py='/usr/bin/python'
+alias rest='curl -k -u admin:changeme -X '
+alias rmcasper='sudo /usr/sbin/jamf removeFramework'
+
+
+# for osx: ex. fnr *.py s/this/that/g
+alias fnr='find . -type f -name "{1}" -exec sed -i "" {2} {} +'
+
+############## jira #################
+
+function createjira ()
+{
+    cmd="jira "
+    options=$*
+    cmd="jira $options"
+    output=`eval "$HOME/bin/jira_link_generator $options"`
+    rtn=$?
+    echo "Link: $output"
+    if [ "$rtn" == "0" ]
+    then
+	open "$output"
+    fi
+}
+
+############# csv #################
+
+printcsv()
+{
+    awk -F, '{for (i=1;i<=NF;++i) {if (NR>1) val[i] = $i; else key[i] = $i}} END {for (j=1;j<i;++j)
+printf("%2d%30s = %s\n", j, key[j], val[j])}' $1
+}
+############# misc ################
+
+# https://www.sublimetext.com/docs/3/osx_command_line.html
+alias subl='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl -a'
+alias opensubldir='open ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User/'
+alias splinfo='echo "SPLUNK_HOME: $SPLUNK_HOME"; splunk status --accept-license; echo "SPLUNK_SRC: $SPLUNK_SRC"; echo "PYTHONPATH: $PYTHONPATH"'
+
+VLESS=$(find /usr/share/vim -name 'less.sh')
+if [ ! -z $VLESS ]; then
+    alias less=$VLESS
+fi
+
+alias rmpyc='find . -name "*.pyc" -print0 | xargs -0 rm'
+alias rmlog='find . -name "*.log" -print0 | xargs -0 rm'
+alias rmhtml='find . -name "*.html" -print0 | xargs -0 rm'
+alias rmxml='find . -name "*.xml" -print0 | xargs -0 rm'
+alias rmpng='find . -name "screenshot*.png" -print0 | xargs -0 rm'
+alias rmeggs='find . -name "*.egg-info" -print0 | xargs -0 rm -rf'
+alias rmtestlogs='rmpyc;rmlog;rmhtml;rmxml;rmpng'
+
+alias pyl='pylint -d "C0103,R0902,R0904,R0801,C0302,W0105,R0913"'
+
+function get_running_splunk_home(){
+    process_num=`ps ax | grep splunkd | grep -v "process-runner" | grep start | awk '{print $1}'`
+    spl_home=`ps -E -ww -p $process_num | awk -F "SPLUNK_HOME=" '{print $2}' | awk -F " " '{print $1}'`
+    echo $spl_home
+
+}
+
+set2runningsplunk(){
+    splhome=`get_running_splunk_home`
+    export SPLUNK_HOME=$splhome
+}
+
+stopsplunk(){
+    splhome=`get_running_splunk_home`
+    $splhome/bin/splunk stop
+}
+
+restartsplunk(){
+    splhome=`get_running_splunk_home`
+    $splhome/bin/splunk restart
+}
+
+############## git ###############
+
+function gitcreatebranch(){
+
+    if (( "$#" < "2" ));
+    then
+        echo "** Usage: gitcreatebranch <new_branch> <upstream_branch>"
+        return 1
+    fi
+
+    git checkout -b $1
+    git push -u origin $1
+    git branch --set-upstream-to=$2 $1
+}
+
+alias ga='git add'
+alias gc='git commit'
+alias gd='git diff'
+alias gs='git status'
+alias gps='git push'
+alias gpl='git pull'
+
+########## LazyGit ###############
+#
+alias lg='lazygit'
+#
+##################################
+
+
+export NVM_DIR="/Users/glouie/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+
+######### pycharm ###############
+
+alias pycharm='/usr/local/bin/charm'
+
+######### shortcuts ###############
+alias wtf='open https://confluence.splunk.com/display/PROD/Webdriver+Test+Framework'
+alias jenkin='open https://apps-jenkins.sv.splunk.com/'
+# alias jira='open https://jira.splunk.com/browse/'  # use the jira() instead
+alias stash='open https://git.splunk.com/projects/SPLCORE/repos/qa/browse'
+alias okta='open https://splunk.okta.com'
+alias releases='open https://releases.sv.splunk.com'
+
+######## jedi #################
+alias installjedivim='cd ~/.vim/bundle/ && git clone --recursive https://github.com/davidhalter/jedi-vim.git'
+alias installjedi='pip install jedi'
+
+####### vundle ###############
+alias installvundle='git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim'
+
+####### isplunk ##############
+# alias isplunk='cat > /tmp/isplunk.input && isplunk_main -f /tmp/isplunk.input'
+
+
+####### cushion ##############
+# to use backend team cache build server.
+# export SPLUNK_CACHED_BUILDS_SERVER=http://health.sv.splunk.com:8080
+
+
+####### massdrop keyboard ########
+# usage: masskbupdate massdrop_ctrl_config_ctrl__default_6087.bin
+#
+# you will need the mdloader_mac executable
+# download here: https://github.com/Massdrop/mdloader/releases
+#
+# configure keyboard keys here:
+#   https://drop.com/mechanical-keyboards/configurator/
+alias masskbupdate='./mdloader_mac --first --download $1 restart'
+
+# alias samantha='bpython -i ids.py'
+
+####### datf ##############
+alias datf='py.test --browser=chrome --html=report.html  --self-contained-html --deployment-type S1 --infra-type=ucp --local-instance '
+alias datfhl='py.test --browser=chrome --html=report.html  --self-contained-html --chrome-options="--headless" --deployment-type S1 --infra-type=ucp --local-instance '
+
+####### open ##############
+function flakyfe () {
+    # usage: flakyfe test_something
+    open "https://go/flaky-fe/$1"
+}
+
+function flakybe () {
+    # usage: flakybe test_something
+    open "https://go/flaky-be/$1"
+}
+
+function jira () {
+    # usage: jira spl-12345
+    open "https://splunk.atlassian.net/secure/QuickSearch.jspa?searchString=$1"
+}
+
+function gitlab () {
+    # usage: gitlab hello
+    open "https://cd.splunkdev.com/search?search=$1"
+}
+
+function splmain () {
+    # usage: splmain hello
+    # project id 7712 is "main"
+    # group id 3228 is "Splunk Core aka splcore"
+    open "https://cd.splunkdev.com/search?group_id=3228&project_id=7712&search=$1"
+}
+
+function chrome () {
+    # chrome <page>
+    /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome $1
+}
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
+alias pjson='python -m json.tool'
+
+
+function pj () {
+    # python3 - << EOF
+    #     import pprint
+    #     pprint.pprint("""'$args'""")
+    # EOF
+    PYCMD='import pprint; pprint.pprint("""'$@'""")'
+    python -c"$PYCMD"
+}
+
+[ -s "/Users/glouie/.scm_breeze/scm_breeze.sh" ] && source "/Users/glouie/.scm_breeze/scm_breeze.sh"
+
+[ -f ~/.fzf.bash ] && source $HOME/.fzf.bash
+
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+
+################### Atuin ######################
+# Install: curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
+################################################
+
+[[ -r ~/.orca_profile]] && . ~/.orca_profile

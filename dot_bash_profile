@@ -1,0 +1,42 @@
+#!/bin/bash
+
+[[ -r ~/.bashrc ]] && . ~/.bashrc
+
+# get docker credentials 
+export DOCKER_USER=
+export DOCKER_API_KEY=
+export DOCKER_CREDS=$DOCKER_USER:$DOCKER_API_KEY
+[[-z "~/.docker_cred"]] && . ~/.docker_cred
+
+# . /usr/local/anaconda/etc/profile.d/conda.sh  # commented out by conda initialize
+# conda activate  # commented out by conda initialize
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/glouie/miniconda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/glouie/miniconda/etc/profile.d/conda.sh" ]; then
+        . "/Users/glouie/miniconda/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/glouie/miniconda/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+
+
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+
+
+[ -s "/Users/glouie/.scm_breeze/scm_breeze.sh" ] && source "/Users/glouie/.scm_breeze/scm_breeze.sh"
+
+################### Atuin ######################
+# Install: curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
+###############################################

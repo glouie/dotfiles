@@ -1,0 +1,1081 @@
+#!/bin/bash
+
+# This file contains some simple functions for setting up
+# the splunk env, and src env.
+
+setupenv() {
+    oldpwd=$PWD
+
+    if [ -n "$1" ]
+    then
+        echo "SPLUNK_HOME is now: $HOME/build/$1"
+        export SPLUNK_HOME="$HOME/build/$1"
+
+        if [ ! -d "$HOME/build/$1" ]
+        then
+            mkdir -p "$HOME/build/$1"
+            echo "created dir: $HOME/build/$1"
+        else
+            cd $SPLUNK_HOME/bin && source ./setSplunkEnv
+        fi
+
+        export splunk_source="$HOME/src/splunk"
+        if [ "$1" == "current" ]
+        then
+            src_branch=$1
+        else
+            src_branch="branches/"$1
+        fi
+
+        export SPLUNK_SRC="$splunk_source/$src_branch"
+        if [ ! -d "$SPLUNK_SRC" ]
+        then
+            mkdir -p "$SPLUNK_SRC"
+            echo "created dir: $SPLUNK_SRC"
+        else
+            cd $SPLUNK_SRC/test && source setTestEnv
+        fi
+
+        alias updatesplunk="cd $SPLUNK_SRC; ./configure --prefix=$SPLUNK_HOME --non-opt --with_python_trunk_tests; make -j8 install; cd ~"
+
+    else
+        echo "Provide an argument of a branch directory like 'current' or 'branches/madonna'"
+        echo "Example: setupenv current"
+        return 0
+    fi
+
+    cd $oldpwd
+}
+
+buildclean() {
+    rm -rf $SPLUNK_HOME
+    mkdir $SPLUNK_HOME
+    cd $SPLUNK_SOURCE/contrib
+    ./buildit.py clean
+    JOBS=-j8 ./buildit.py --osx-deployment-target=10.9 --skip-node  # --universal-targets=i386,x86_64 #,ppc
+    echo "Finished building contrib"
+    cd $SPLUNK_SOURCE
+    ./configure --prefix=$SPLUNK_HOME --non-opt --with_python_trunk_tests
+    echo "Finished configure"
+    make -j8 install
+    echo "Finished make"
+    cd src/main
+    # ./classify train
+    # touch $SPLUNK_HOME/ftr
+    cp $SPLUNK_HOME/etc/myinstall/splunkd.xml $SPLUNK_HOME/etc/myinstall/splunkd.xml.cfg-default
+}
+
+setSplunkHome(){
+    if [ -n $1 ]
+    then
+        oldpwd=$PWD
+        export SPLUNK_HOME=$1
+        cd $SPLUNK_HOME/bin && source ./setSplunkEnv
+        cd $oldpwd
+        echo "SPLUNK_HOME is set to '"$SPLUNK_HOME"'."
+    else
+        echo "Provide an argument of a branch directory."
+        echo "Example: setSplunkHome /Users/abc/splunk_build/current"
+        return 0
+    fi
+}
+
+setSplunkSrc(){
+    if [ -n $1 ]
+    then
+        oldpwd=$PWD
+        export SPLUNK_SRC=$1
+        export SPLUNK_SOURCE=$1
+        export BRANCH=`echo ${SPLUNK_SRC##*/}`
+        cd $SPLUNK_SRC/test && source ./setTestEnv
+        cd $oldpwd
+        echo "SPLUNK_SRC is set to '"$SPLUNK_SRC"'."
+    else
+        echo "Provide an argument of a branch directory."
+        echo "Example: setSplunkSrc /Users/abc/splunk_build/current"
+        return 0
+    fi
+}
+
+setSplunkHelmutSrc(){
+    if [ -n $1 ]
+    then
+        oldpwd=$PWD
+        export SPLUNK_SRC=$1
+        export SPLUNK_SOURCE=$1
+        cd $SPLUNK_SRC/new_test && source ./setTestEnv $SPLUNK_HOME
+        cd $oldpwd
+        echo "SPLUNK_SRC is set to '"$SPLUNK_SRC"'."
+    else
+        echo "Provide an argument of a branch directory."
+        echo "Example: setSplunkSrc /Users/abc/splunk_build/current"
+        return 0
+    fi
+}
+
+setuphome(){
+    err="[Error]: "
+    unset user_branch
+    unset last
+    export PYTHONPATH=
+
+    for last; do true; done
+
+    if [ -e $HOME/pkg ]
+    then
+        echo "Checking for builds directory..."
+    else
+        echo $err"Can not find builds directory. Exiting."
+        return 1
+    fi
+
+    #builds_list=`ls $HOME/pkg | awk -F " " '{print $8}'`
+    builds_list=`ls -tr $HOME/pkg | awk -F " " '{print $NF}'`
+    builds_list=($builds_list)
+
+    builds_list_len=${#builds_list[*]}
+    cols=2
+    rows=$((1+${#builds_list[*]}/cols))
+    count=0
+    entry_len=40
+
+    if [ $# -eq 0 ]
+    then
+        echo "Available splunk build versions on this system:"
+        echo
+        for ((row=1; row<=rows; row++))
+        do
+            for ((col=1; col<=cols; col++))
+            do
+                if (( count<builds_list_len ))
+                then
+                    entry_str=`echo -n $count")" ${builds_list[((count))]}`
+                    echo -n $entry_str
+                    str_len=`expr ${#entry_str}`
+                    for ((tabcnt=str_len; tabcnt<=entry_len; tabcnt++))
+                    do
+                        echo -n " "
+                    done
+                    count=$((count+1))
+                fi
+            done
+            echo
+        done
+    fi
+
+    if [ ! -z "$last" ]
+    then
+        user_branch="$last"
+    else
+        echo
+        echo -n "Select a splunk build to setup: "
+        read user_branch
+    fi
+
+    if (( ! (( ((user_branch < builds_list_len)) && ((user_branch >= 0)) )) ))
+    then
+        echo $err"Invalid Choice"
+        echo $info"Exiting..."
+        echo
+        return 1
+    fi
+    echo
+    build=${builds_list[((user_branch))]}
+
+    echo "Build '"$build"' selected, setting SPLUNK_HOME..."
+
+    setSplunkHome $HOME/pkg/$build/splunk
+    splunk version --accept-license
+
+    return 0
+}
+
+setupgit(){
+
+    oldpwd=$PWD
+    if [[ $# -eq 0 ]]
+    then
+        cd $GIT_HOME/main && git pull
+        cd $GIT_HOME/main && git pull
+    else
+        cd $GIT_HOME/main && git checkout $1
+        cd $GIT_HOME/main && git pull
+        cd $GIT_HOME/main && git checkout $1
+        cd $GIT_HOME/main && git pull
+    fi
+    cd $GIT_HOME/main/new_test && source setTestEnv
+    export SPLUNK_SRC=$GIT_HOME/main
+    export SPLUNK_SOURCE=$GIT_HOME/main
+    cd $oldpwd
+
+}
+
+
+setupsrc(){
+    err="[Error]: "
+    unset user_branch
+    unset last
+
+    for last; do true; done
+    splunk_source="$HOME/src/splunk"
+
+    if [ -e $splunk_source/current ]
+    then
+        branches=("current")
+    fi
+
+    branches_builds_list=`ls $splunk_source/branches | awk -F " " '{print $8}'`
+    branches_builds_list=($branches_builds_list)
+    builds_list=( ${branches[@]} ${branches_builds_list[@]} )
+
+    builds_list_len=${#builds_list[*]}
+    cols=3
+    rows=$((1+${#builds_list[*]}/cols))
+    count=0
+    entry_len=25
+
+    if [[ $# -eq 0 || ( $# -eq 1 && "$1" == "-h" ) ]]
+    then
+        echo "Available splunk source branches on this system:"
+        echo
+        for ((row=1; row<=rows; row++))
+        do
+            for ((col=1; col<=cols; col++))
+            do
+                if (( count<builds_list_len ))
+                then
+                    entry_str=`echo -n $count")" ${builds_list[((count))]}`
+                    echo -n $entry_str
+                    str_len=`expr ${#entry_str}`
+                    for ((tabcnt=str_len; tabcnt<=entry_len; tabcnt++))
+                    do
+                        echo -n " "
+                    done
+                    count=$((count+1))
+                fi
+            done
+            echo
+        done
+    fi
+
+    if [[ ! -z "$last" && "$last" != '-h' ]]
+    then
+        user_branch="$last"
+    else
+        echo
+        echo -n "Select a splunk source branch: "
+        read user_branch
+    fi
+
+    if (( ! (( ((user_branch < builds_list_len)) && ((user_branch >= 0)) )) ))
+    then
+        echo $err"Invalid Choice"
+        echo $info"Exiting..."
+        echo
+        return 1
+    fi
+
+    echo
+
+    if (( user_branch == 0 ))
+    then
+        build=$splunk_source/${builds_list[((user_branch))]}
+    else
+        build=$splunk_source/branches/${builds_list[((user_branch))]}
+    fi
+
+    echo $build" selected, setting SPLUNK_SRC..."
+    rm -rf ~/.ssh/authorized_keys*
+
+    if [ $1 == "-h" ]
+    then
+        setSplunkHelmutSrc $build
+    else
+        setSplunkSrc $build
+    fi
+
+    return 0
+}
+
+dslrb () {
+    oldpwd=$PWD
+    err="[Error]: "
+    info=''
+    no_args=0
+    product='splunk'
+
+    pltfm=`uname -a | grep -i "darwin"`
+    echo "Platform info: "$pltfm
+
+    if [ -z "$pltfm" ]
+    then
+        dl_cmd='wget'
+        dl_cmd2='wget'
+        pltfm_name="Linux-x86_64"
+        # releases_url='http://releases.splunk.com/cgi-bin/splunk_build_fetcher.py?PLAT_PKG=Linux-x86_64.tgz&DELIVER_AS=url&UF=0&BRANCH=current'
+    else
+        dl_cmd='curl -Os'
+        dl_cmd2='curl -X POST '
+        pltfm_name="darwin-64"
+        # releases_url='http://releases.splunk.com/cgi-bin/splunk_build_fetcher.py?PLAT_PKG=darwin-64.tgz&DELIVER_AS=url&UF=0&BRANCH=current'
+    fi
+
+    # echo "download cmd: "$dl_cmd
+
+    if [ -z $PKG_HOME ]
+    then
+        echo "PKG_HOME is not set, please set it to the directory where you want your packages to be downloaded to."
+        return 1
+    fi
+
+    if [[ ($# -gt 0 && "$1" != "-l" ) || ($# -gt 1 && "$1" == "-l" ) ]]
+    then
+        for i in $@; do :; done
+        branch=$i
+    else
+        branch=current
+    fi
+
+    if [ "$1" == "-l" ]
+    then
+        product='splunklight'
+    fi
+
+    echo $info"Looking for latest release builds..."
+    releases_url="http://releases.splunk.com"
+    `$dl_cmd $releases_url/status.html`
+
+
+    grep -i "Branch: " status.html > branches.tmp
+    # arr=(`awk -F " " '{print $3}' branches.tmp | awk -F "<" '{print $1}'`)
+    arr=(`awk -F " " '{print $4}' branches.tmp | awk -F "<" '{print $1}'`)
+    rm -rf status.html
+    rm -rf branches.tmp
+
+    arr_len=${#arr[*]}
+    # cols=3
+    cols=2
+    rows=$((1+${#arr[*]}/cols))
+    count=0
+    # entry_len=25
+    entry_len=40
+
+    if [[ $# -eq 0 || ( $# -eq 1 && "$1" == "-l" ) ]]
+    then
+        echo "Select from the following branches: "
+        echo
+        for ((row=1; row<=rows; row++))
+        do
+            for ((col=1; col<=cols; col++))
+            do
+                if (( count<arr_len ))
+                then
+                    entry_str=`echo -n $count")" ${arr[((count))]}`
+                    str_len=`expr ${#entry_str}`
+                    echo -n $entry_str
+                    for ((tabcnt=str_len; tabcnt<=entry_len; tabcnt++))
+                    do
+                        echo -n " "
+                    done
+                    count=$((count+1))
+                fi
+            done
+            echo
+        done
+        echo
+        echo -n "Select a branch to download from releases: "
+        read user_branch
+        if (( ! (( ((user_branch < arr_len)) && ((user_branch >= 0)) )) ))
+        then
+            echo $err"Invalid Choice"
+            echo $info"Exiting..."
+            echo
+            cd $oldpwd
+            return 1
+        fi
+        echo
+        branch_name=${arr[((user_branch))]}
+        branch=${arr[((user_branch))]}_build
+    fi
+
+    dcmd="$dl_cmd2 $releases_url/cgi-bin/splunk_build_fetcher.py -d PLAT_PKG=$pltfm_name.tgz&DELIVER_AS=url&UF=0&BRANCH=$branch_name&PRODUCT=$product"
+    echo $dcmd
+    # download_url=`$dl_cmd2 \"$releases_url'/cgi-bin/splunk_build_fetcher.py" -d "PLAT_PKG='$pltfm_name'.tgz&DELIVER_AS=url&UF=0&'BRANCH=$branch_name\"`
+    # `$dcmd`
+    download_url=`$dcmd`
+    echo "Getting the download link..."
+    tarball_name=`echo $download_url  | awk -F "/" '{print $7}'`
+    build_version=`echo $tarball_name | awk -F "-$pltfm_name" '{print $1}'`
+
+    echo "Release branch ... $branch_name"
+    echo "Build ............ $build_version"
+    echo "Download Link .... $download_url"
+    echo "Product .......... $product"
+    echo
+
+    echo $info"Checking for build directory..."
+
+    build_dir=$PKG_HOME
+
+    if [ -e $build_dir ]
+    then
+        echo $info"Package directory found: $build_dir"
+    else
+        # echo $info"Package directory not found, creating package directory..."
+        mkdir $build_dir
+        echo $info"Package directory created: $build_dir"
+    fi
+
+    echo
+    splunk_dir_name=`echo $build_version | awk -F "splunk-" '{print $2}'`
+
+    if [[ 'splunk' == $product ]]
+    then
+        splunk_dir=$build_dir/$branch_name-$splunk_dir_name
+    elif [[ 'splunklight' == $product ]]
+    then
+        splunk_dir=$build_dir/$branch_name-light-$splunk_dir_name
+    fi
+    echo $info"Checking for Splunk Directory..."
+
+    if [ -e $splunk_dir ]
+    then
+        echo $info"Splunk directory already exists for this version."
+        echo $info"Exiting..."
+        cd $oldpwd
+        return 1
+    else
+        # echo $info"Creating Splunk directory..."
+        mkdir $splunk_dir
+        echo $info"Splunk directory created: $splunk_dir"
+    fi
+
+    # is_beta=`echo $branch_name | grep -i 'beta'`
+    # if [ $is_beta ]
+    # then
+    #     tarball_name=splunkbeta-$splunk_dir_name-$platform.tgz
+    # else
+    #     tarball_name=splunk-$splunk_dir_name-$platform.tgz
+    # fi
+
+    # echo "Download Command: $dl_cmd $download_url/$tarball_name"
+    cd $splunk_dir && `$dl_cmd $download_url`
+    tar zxf "$tarball_name"
+
+    if [ $is_beta ]
+    then
+        mv $splunk_dir/splunkbeta $splunk_dir/splunk
+    fi
+
+    cd $oldpwd
+    echo $info"Done."
+}
+
+
+uigrep () {
+    grep -ir $1 $SPLUNK_SRC/lib/*
+    grep -ir $1 $SPLUNK_SRC/new_test/lib/*
+    grep -ir $1 $SPLUNK_SRC/new_test/tests/web/webdriver/*
+
+}
+
+
+setuptox(){
+    err="[Error]: "
+    unset user_branch
+    unset last
+    export PYTHONPATH=
+
+    for last; do true; done
+
+    if [ -e $HOME/pkg ]
+    then
+        echo "Checking for builds directory..."
+    else
+        echo $err"Can not find builds directory. Exiting."
+        return 1
+    fi
+
+    #builds_list=`ls $HOME/pkg | awk -F " " '{print $8}'`
+    # builds_list=`ls -tr $HOME/pkg | awk -F " " '{print $NF}'`
+    # builds_list=($builds_list)
+    builds_list=($(/bin/ls ~/pkg))
+    echo "builds_list: "$builds_list
+
+    builds_list_len=${#builds_list[@]}+1
+    cols=2
+    rows=$((1+${#builds_list[*]}/cols))
+    count=1
+    entry_len=50
+
+    if [ $# -eq 0 ]
+    then
+        echo "Available splunk build versions on this system:"
+        echo
+        for ((row=1; row<=rows; row++))
+        do
+            for ((col=1; col<=cols; col++))
+            do
+                if (( count<builds_list_len ))
+                then
+                    entry_str=`echo -n $count")" ${builds_list[((count))]}`
+                    echo -n $entry_str
+                    str_len=`expr ${#entry_str}`
+                    for ((tabcnt=str_len; tabcnt<=entry_len; tabcnt++))
+                    do
+                        echo -n " "
+                    done
+                    count=$((count+1))
+                fi
+            done
+            echo
+        done
+    fi
+
+    if [ ! -z "$last" ]
+    then
+        user_branch="$last"
+    else
+        echo
+        echo -n "Select a splunk build to setup: "
+        read user_branch
+    fi
+
+    if (( ! (( ((user_branch < builds_list_len)) && ((user_branch >= 0)) )) ))
+    then
+        echo $err"Invalid Choice"
+        echo $info"Exiting..."
+        echo
+        return 1
+    fi
+    echo
+    build=${builds_list[((user_branch))]}
+
+    echo "Build '"$build"' selected, setting SPLUNK_HOME..."
+
+    export SPLUNK_HOME=$HOME/pkg/$build/splunk
+    $SPLUNK_HOME/bin/splunk version --accept-license
+    export SPLUNK_SRC=$GIT_HOME/main
+    export SPLUNK_SOURCE=$GIT_HOME/main
+    cd $SPLUNK_SRC/qa/new_test
+    return 0
+}
+
+seed_default_user () {
+
+    echo "Setting up admin:changeme user..."
+    echo "[user_info]\nUSERNAME = admin\nPASSWORD=changeme\n" > $SPLUNK_HOME/etc/system/local/user-seed.conf
+
+    echo "username: admin"
+    echo "password: changeme"
+}
+
+setup_allow_remote_login () {
+
+    echo "Setting up allowRemoteLogin=always... "
+    echo "[general]\nallowRemoteLogin = always\n" > $SPLUNK_HOME/etc/system/local/server.conf
+
+    echo "conf file: server.conf"
+    echo "stanza: [general]"
+    echo "attribute: allowRemoteLogin = always"
+}
+
+setup_jschart_test_mode () {
+
+    echo "Setting up jschart_test_mode=True and updateCheckerBaseURL = 0..."
+    echo "[settings]\njschart_test_mode = True\nupdateCheckerBaseURL = 0\n" > $SPLUNK_HOME/etc/system/local/web.conf
+
+    echo "conf file: web.conf"
+    echo "stanza: [settings]"
+    echo "attribute: jschart_test_mode = True"
+    echo "attribute: updateCheckerBaseURL = 0"
+}
+
+cushy () {
+    oldpwd=$PWD
+    err="[Error]: "
+    info=''
+    no_args=0
+    product='splunk'
+
+    pltfm=`uname -a | grep -i "darwin"`
+    echo "Platform info: "$pltfm
+
+    if [ -z "$pltfm" ]
+    then
+        dl_cmd='wget'
+        dl_cmd2='wget'
+        pltfm_name="Linux-x86_64"
+        # releases_url='http://releases.splunk.com/cgi-bin/splunk_build_fetcher.py?PLAT_PKG=Linux-x86_64.tgz&DELIVER_AS=url&UF=0&BRANCH=current'
+    else
+        dl_cmd='curl -Os'
+        dl_cmd2='curl -X POST'
+        pltfm_name="darwin-64"
+        # releases_url='http://releases.splunk.com/cgi-bin/splunk_build_fetcher.py?PLAT_PKG=darwin-64.tgz&DELIVER_AS=url&UF=0&BRANCH=current'
+    fi
+
+    # echo "download cmd: "$dl_cmd
+
+    if [ -z $PKG_HOME ]
+    then
+        echo "PKG_HOME is not set, please set it to the directory where you want your packages to be downloaded to."
+        return 1
+    fi
+
+    if [[ ($# -gt 0 && "$1" != "-l" ) || ($# -gt 1 && "$1" == "-l" ) ]]
+    then
+        for i in $@; do :; done
+        branch=$i
+    else
+        branch=develop
+    fi
+
+
+    echo $info"Looking for latest release builds..."
+    releases_url="http://releases.splunk.com"
+    # `$dl_cmd $releases_url/status.html`
+    # `$dl_cmd $releases_url/index.html`
+
+    # grep -i "Branch: " status.html > branches.tmp
+    # grep -i "branch_header" index.html > branches.tmp
+
+    # arr=(`awk -F " " '{print $3}' branches.tmp | awk -F "<" '{print $1}'`)
+    # arr=(`awk -F " " '{print $2}' branches.tmp | awk -F "<" '{print $1}'`)
+    # curl -X GET 'https://releases-api.splunkeng.com/commits/latest/release' | python -m json.tool
+    python -c "import requests,json; x = [print(cont['branch']['ref']) for cont in json.loads(requests.get('https://releases-api.splunkeng.com/commits/latest/release').content)]" >> branches.tmp
+    arr=(`awk -F "\n" '{print $1}' branches.tmp`)
+    # arr=(`awk -F "name=\"" '{print $2}' branches.tmp | awk -F "\">" '{print $1}'`)
+    #rm -rf status.html
+    # rm -rf index.html
+    rm -rf branches.tmp
+
+    arr_len=${#arr[*]}+1
+    # cols=3
+    cols=2
+    rows=$((1+${#arr[*]}/cols))
+    count=1
+    # entry_len=25
+    entry_len=40
+
+    if [[ $# -eq 0 || ( $# -eq 1 && "$1" == "-l" ) ]]
+    then
+        echo "Select from the following branches: "
+        echo
+        for ((row=1; row<=rows; row++))
+        do
+            for ((col=1; col<=cols; col++))
+            do
+                if (( count<arr_len ))
+                then
+                    entry_str=`echo -n $count")" ${arr[((count))]}`
+                    str_len=`expr ${#entry_str}`
+                    echo -n $entry_str
+                    for ((tabcnt=str_len; tabcnt<=entry_len; tabcnt++))
+                    do
+                        echo -n " "
+                    done
+                    count=$((count+1))
+                fi
+            done
+            echo
+        done
+        echo
+        echo -n "Select a branch to download from releases: "
+        read user_branch
+        if (( ! (( ((user_branch < arr_len)) && ((user_branch >= 0)) )) ))
+        then
+            echo $err"Invalid Choice"
+            echo $info"Exiting..."
+            echo
+            cd $oldpwd
+            return 1
+        fi
+        echo
+        branch_name=${arr[((user_branch))]}
+        branch=${arr[((user_branch))]}_build
+
+        echo "Branch name selected: $branch_name"
+        echo "Branch: $branch"
+        echo
+    fi
+
+    echo "Getting the download link..."
+    # dcmd="$dl_cmd2 $releases_url/cgi-bin/splunk_build_fetcher.py -d PLAT_PKG=$pltfm_name.tgz&DELIVER_AS=url&UF=0&BRANCH=$branch_name&PRODUCT=$product"
+    dcmd="$dl_cmd2 https://fetcher.re.splunkdev.com/fetch_build -d \"PLAT_PKG=$pltfm_name.tgz&DELIVER_AS=url&UF=0&BRANCH=$branch_name&PRODUCT=$product&BUILD_TYPE=standard\""
+    echo "DCMD: "$dcmd
+
+    # download_url=`$dl_cmd2 \"$releases_url'/cgi-bin/splunk_build_fetcher.py" -d "PLAT_PKG='$pltfm_name'.tgz&DELIVER_AS=url&UF=0&'BRANCH=$branch_name\"`
+    # `$dcmd`"
+    download_url=`eval $dcmd`
+    tarball_name=`echo $download_url  | awk -F "/" '{print $12}'`
+    build_version=`echo $tarball_name | awk -F "-$pltfm_name" '{print $1}'`
+
+    echo "------------------   ---------------------------------------------------------------------"
+    echo "Product              $product"
+    echo "Download command     $dcmd"
+    echo "Release branch       $branch_name"
+    echo "Download URL link    $download_url"
+    echo "Build version        $build_version"
+    echo "Tarball name         $tarball_name"
+    echo "------------------   -----------------------------------------------------------------"
+    echo
+
+    if [ -z $tarball_name ]
+    then
+        echo "Error getting tarball name, likely due to not successfully getting the download url."
+        return 1
+    fi
+
+    echo $info"Checking for build directory..."
+
+    build_dir=$PKG_HOME
+
+    if [ -e $build_dir ]
+    then
+        echo $info"Package directory found: $build_dir"
+    else
+        # echo $info"Package directory not found, creating package directory..."
+        mkdir $build_dir
+        echo $info"Package directory created: $build_dir"
+    fi
+
+    echo
+    splunk_dir_name=`echo $build_version | awk -F "splunk" '{print $2}'`
+    echo "DEBUG: product="$product
+    echo "DEBUG: build_version="$build_version
+    echo "DEBUG: splunk_dir_name="$splunk_dir_name
+
+    if [[ 'splunk' == $product ]]
+    then
+        splunk_dir=$build_dir/$branch_name$splunk_dir_name
+    # elif [[ 'splunklight' == $product ]]
+    else
+        splunk_dir=$build_dir/$branch_name-$splunk_dir_name
+    fi
+
+    echo $info"Checking for Splunk Directory..."
+
+    if [ -e $splunk_dir ]
+    then
+        echo $info"Splunk directory already exists for this version."
+        echo $info"Exiting..."
+        cd $oldpwd
+        return 1
+        exit 1
+    else
+        # echo $info"Creating Splunk directory..."
+        mkdir $splunk_dir
+        echo $info"Splunk directory created: $splunk_dir"
+    fi
+
+    # cushion -b $branch_name -p $product -c -f -no -d $splunk_dir --answer_yes
+    cushion -b $branch_name -p $product -c -no -d $splunk_dir --answer_yes
+    if (( $? )); then
+        echo "Failed to download and install the "$product" build with the branch '"$branch_name"'">&2
+        return 1
+        exit 1
+    fi
+
+    if [ $is_beta ]
+    then
+        mv $splunk_dir/splunkbeta $splunk_dir/splunk
+    fi
+
+    echo $info"Downloaded and unpacked splunk..."
+    echo $info"Setting up testing env..."
+
+    export SPLUNK_HOME=$splunk_dir/splunk
+
+    # echo "Setting up admin:changeme user..."
+    # echo "[user_info]\nUSERNAME = admin\nPASSWORD=changeme\n" > $SPLUNK_HOME/etc/system/local/user-seed.conf
+
+    # echo "Setting up allowRemoteLogin=always... "
+    # echo "[general]\nallowRemoteLogin = always\n" > $SPLUNK_HOME/etc/system/local/server.conf
+
+    # echo "Setting up jschart_test_mode=True and updateCheckerBaseURL = 0..."
+    # echo "[settings]\njschart_test_mode = True\nupdateCheckerBaseURL = 0\n" > $SPLUNK_HOME/etc/system/local/web.conf
+    `seed_default_user`
+    `setup_allow_remote_login`
+    `setup_jschart_test_mode`
+
+    $SPLUNK_HOME/bin/splunk version --accept-license
+    export SPLUNK_SRC=$GIT_HOME/main
+    export SPLUNK_SOURCE=$GIT_HOME/main
+    cd $oldpwd
+
+    echo $info"Done."
+    return 0
+}
+
+alias setupcushy='pip install cushion -i https://repo.splunk.com/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple'
+
+
+cleansetup(){
+
+    info='INFO: '
+    oldpwd=$PWD
+
+    # check for tools.
+    if ! git_loc="$(type -p git)" || [ -z "$git_loc" ]; then
+        echo "Please make sure git is installed."
+        return 1
+    fi
+
+    if ! python_loc="$(type -p python)" || [ -z "$python_loc" ]; then
+        echo "Please make sure python 2.7.12 is installed."
+        return 1
+    fi
+
+    if ! pip_loc="$(type -p pip)" || [ -z "$pip_loc" ]; then
+        echo "Please make sure pip is installed."
+        return 1
+    fi
+
+    if ! virtualenv_loc="$(type -p virtualenv)" || [ -z "$virtualenv_loc" ]; then
+        echo "Please make sure virtualenv is installed."
+        return 1
+    fi
+
+    # git
+
+    if [ -e $HOME/git ]
+    then
+        echo $info"Found git directory: "$HOME"/git"
+    else
+        mkdir $HOME/git
+        echo $info"Created '"$HOME"/git' directory"
+    fi
+
+    cd $HOME/git
+
+    if [ -e $HOME/gitlab/main ]
+    then
+        echo $info"Found qa repo: "$HOME"/gitlab/main"
+    else
+        git clone ssh://git@git.splunk.com:7999/splcore/main.git
+        echo $info"Clone the SPLCORE/main repo here: '"$HOME"/gitlab/main'"
+    fi
+
+    if [ -e $HOME/gitlab/html-webdriver ]
+    then
+        echo $info"Found html-webdriver repo: "$HOME"/gitlab/html-webdriver"
+    else
+        git clone ssh://git@git.splunk.com:7999/clientqa/html-webdriver.git
+        echo $info"Clone the CLIENTQA/html-webdriver repo here: '"$HOME"/gitlab/html-webdriver'"
+    fi
+
+    if [ -e $HOME/gitlab/pytest-webdriver ]
+    then
+        echo $info"Found pytest-webdriver repo: "$HOME"/gitlab/pytest-webdriver"
+    else
+        git clone ssh://git@git.splunk.com:7999/clientqa/pytest-webdriver.git
+        echo $info"Clone the CLIENTQA/pytest-webdriver repo here: '"$HOME"/gitlab/pytest-webdriver'"
+    fi
+
+    # virtualenv
+
+    if [ -e $HOME/venv ]
+    then
+        echo $info"Found venv directory: "$HOME"/venv"
+    else
+        mkdir $HOME/venv
+        echo $info"Created '"$HOME"/venv' directory"
+    fi
+
+    if [ -e $HOME/venv/splunkqa ]
+    then
+        echo $info"Found splunkqa virtualenv: "$HOME"/venv/splunkqa"
+    else
+        cd $HOME/venv && virtualenv splunkqa
+        echo $info"Created splunkqa virtualenv: "$HOME"/venv/splunkqa"
+    fi
+
+    # splunkqa virtualenv.
+
+    if [ -e $HOME/venv/splunkqa ]
+    then
+        echo $info"Found splunkqa virtualenv: "$HOME"/venv/splunkqa"
+    else
+        echo $info"The splunkqa virtualenv was not found."
+        return 1
+    fi
+
+    source $HOME/venv/splunkqa/bin/activate
+    pip install -U pip
+    pip install tox
+    pip install cushion -i https://repo.splunk.com/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple
+
+    cd $HOME/gitlab/main
+    git pull
+    cd $HOME/gitlab/main/new_test
+    pip install -i https://repo.splunk.com/artifactory/api/pypi/pypi-local/simple --extra-index-url https://pypi.python.org/simple -r requirements.txt
+    pip install bpython
+
+}
+
+
+####### orca #######
+# alias orca="docker run --rm -it --name orca -e USER=$USER \
+#    -v /var/run/docker.sock:/var/run/docker.sock \
+#    -v $HOME/.orca:/root/.orca \
+#    -v $HOME/.ssh:/root/.ssh \
+#    -v $HOME/.docker:/root/.docker \
+#    -v \$(pwd -P):/orca-home repo.splunk.com/splunk/products/orca"
+
+
+####### high sierra splunk setting #######
+alias setsierra='echo "OPTIMISTIC_ABOUT_FILE_LOCKING = 1" >> $SPLUNK_HOME/etc/splunk-launch.conf'
+
+
+####### gitlab #######
+export GITLAB_TOKEN=
+export GITLAB_FEED_TOKEN=
+export GITLAB_PERSONAL_TOKEN=
+[[ -z "~/.gitlab_cred" ]] && . ~/.gitlab_cred
+
+
+#<!-- START ORCA ALIAS -->
+unalias orca 2>/dev/null
+unalias orca_ssh 2>/dev/null
+unalias orca_dev 2>/dev/null
+unalias orca_debug_sh 2>/dev/null
+
+latest_check() {
+        export DOCKER_TLS_VERIFY=
+        export COMPOSE_TLS_VERSION=
+        export DOCKER_CERT_PATH=
+        export DOCKER_HOST=
+        # 1st argument is the repo to compare against, dev or prod
+        repotarget=""
+        shorttarget=""
+        if [ "$1" == "dev" ]; then
+          repotarget="repo.splunk.com/splunk/products/orca/branches/develop"
+          shorttarget="splunk/products/orca/branches/develop"
+        else
+          repotarget="repo.splunk.com/splunk/products/orca"
+          shorttarget="splunk/products/orca "
+        fi
+        fulltarget=$repotarget":latest"
+        LOCAL_SHA=$(docker images --digests | grep "${repotarget}\s" | grep latest | awk -F' ' '{print$3}')
+        REMOTE=$(curl -I https://repo.splunk.com 2>/dev/null)
+        if [[ "$REMOTE" == *"Unknown host"* || "$REMOTE" == "" ]]; then
+          echo Connection to repo.splunk.com failed! Unable to check 'latest' image version.
+        else
+          command='curl -s "https://repo.splunk.com/artifactory/ui/views/dockerv2" -XPOST -H "Content-Type: application/json;charset=UTF-8" -H "Request-Agent: artifactoryUI" --data-binary '\''{"view":"dockerv2","repoKey":"docker-solutions-local","path":"'$shorttarget"/latest"'"}'\'' | python -c "from __future__ import print_function; import sys, json; print (json.load(sys.stdin)['\''tagInfo'\'']['\''digest'\''])"'
+           REMOTE_SHA=$(eval $command)
+           if [ "$LOCAL_SHA" != "$REMOTE_SHA" ]; then
+             while true; do
+               read -p "There is a new version available for ORCA. Would you like to upgrade? [y/n] " yn
+                 case $yn in
+                   [Yy]* ) docker pull $fulltarget;
+                           if [ $? -eq 0 ]; then
+                                echo "Your local 'latest' ORCA image is up to date!";
+                            else
+                                echo "Error pulling 'latest' ORCA image";
+                            fi
+                     break;;
+                   [Nn]* ) break;;
+                   * ) echo 'Please enter yes or no.';;
+                 esac
+             done
+             while true; do
+               read -p "Do you wish to remove old ORCA images? [y/n] " yn
+                 case $yn in
+                   [Yy]* ) docker images | grep $repotarget | awk -F' ' '{print$3}' | tail -n+4 | xargs docker rmi -f
+                     echo "All ORCA images except the latest 3 have been removed!";
+                     echo "Kept images:";
+                     docker images | grep $repotarget;
+                     echo;
+                     break;;
+                   [Nn]* ) break;;
+                   * ) echo 'Please enter yes or no.';;
+                 esac
+              done
+           fi
+        fi
+};
+
+# orca() {
+#     latest_check
+#     docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
+#         -v /var/run/docker.sock:/var/run/docker.sock \
+#         -v $HOME/.orca:/root/.orca \
+#         -v $HOME/.kube:/root/.kube \
+#         -v $HOME/.docker:/root/.docker \
+#         -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:latest \
+#         "$@"
+# };
+
+
+alias orca="docker run --rm -it --name orca -e USER=$USER \
+   -v /var/run/docker.sock:/var/run/docker.sock \
+   -v $HOME/.orca:/root/.orca \
+   -v $HOME/.ssh:/root/.ssh \
+   -v $HOME/.docker:/root/.docker \
+   -v \$(pwd -P):/orca-home repo.splunk.com/splunk/products/orca"
+
+orca_legacy() {
+    latest_check
+    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $HOME/.orca:/root/.orca \
+        -v $HOME/.docker:/root/.docker \
+        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:0.8.17 \
+        "$@"
+};
+
+orca_ssh() {
+    latest_check
+    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $HOME/.orca:/root/.orca \
+        -v $HOME/.kube:/root/.kube \
+        -v $HOME/.ssh:/root/.ssh \
+        -v $HOME/.docker:/root/.docker \
+        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:latest \
+        "$@"
+};
+
+orca_dev() {
+    latest_check dev
+    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $HOME/.orca:/root/.orca \
+        -v $HOME/.kube:/root/.kube \
+        -v $HOME/.docker:/root/.docker \
+        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca/branches/develop:latest \
+        "$@"
+};
+
+orca_beta() {
+    latest_check
+    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $HOME/.orca:/root/.orca \
+        -v $HOME/.docker:/root/.docker \
+        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:beta \
+        "$@"
+};
+
+orca_debug_sh() {
+    latest_check
+    docker run --rm -it -e USER=$USER -e HOST_HOME=$HOME \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v $HOME/.orca:/root/.orca \
+        -v $HOME/.kube:/root/.kube \
+        -v $HOME/.docker:/root/.docker \
+        --entrypoint /bin/sh \
+        -v "$(pwd -P)":/orca-home repo.splunk.com/splunk/products/orca:latest \
+        "$@"
+};
+
+update_orca_alias() {
+    sed -i '' '/#<!-- START ORCA ALIAS -->/,/#<!-- END ORCA ALIAS -->\n/d' ~/.bash_profile
+    curl -s https://repo.splunk.com/artifactory/Solutions/Common/misc/orca.sh >> ~/.bash_profile
+    echo "Please run 'source ~/.bash_profile' or restart your shell."
+};
+
+update_orca_nfr_license() {
+    curl -L -o ~/.orca/nfr_enterprise.lic http://go.splunk.com/splunk-nfr-license
+};
+#<!-- END ORCA ALIAS -->
