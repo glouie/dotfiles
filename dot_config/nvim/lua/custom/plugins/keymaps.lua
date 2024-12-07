@@ -9,6 +9,11 @@ vim.g.mapleader = ' '
 -- Disables the spacebar key from default behavior in Normal and Visual mode
 map({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
+-- lua keymaps
+map('n', '<leader><leader>x', '<cmd>source %<CR>', { desc = 'Source current file.' })
+map('n', '<leader>e', ':.lua<CR>', { desc = 'Execute lua line.' })
+map('n', '<leader>e', ':lua<CR>', { desc = 'Execute highlighted lua lines.' })
+
 -- Remap for dealing with word wrap
 map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
@@ -132,5 +137,9 @@ map('n', 'B', '^', { noremap = false })
 map('n', 'E', '$', { noremap = false })
 
 map('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
+
+-- pounce
+map({ 'n', 'v' }, '<leader>h', ':Pounce<CR>', { silent = true, desc = 'Pounce' })
+map('n', 'H', ':PounceRepeat<CR>', { silent = true, desc = 'Pounce Repeat' })
 
 return {}

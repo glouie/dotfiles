@@ -4,6 +4,7 @@ return {
   -- LSP Configuration & Plugins
   'neovim/nvim-lspconfig',
   dependencies = {
+    opts = { lsp = { auto_attach = true } },
     -- Automatically install LSPs to stdpath for neovim
     'williamboman/mason.nvim',
     'williamboman/mason-lspconfig.nvim',
@@ -150,6 +151,33 @@ return {
       end, { desc = 'Format current buffer with LSP' })
     end
 
+    local navbuddy = require 'nvim-navbuddy'
+
+    require('lspconfig').html.setup {
+      on_attach = function(client, bufnr)
+        navbuddy.attach(client, bufnr)
+      end,
+    }
+    require('lspconfig').lua_ls.setup {
+      on_attach = function(client, bufnr)
+        navbuddy.attach(client, bufnr)
+      end,
+    }
+    require('lspconfig').pyright.setup {
+      on_attach = function(client, bufnr)
+        navbuddy.attach(client, bufnr)
+      end,
+    }
+    require('lspconfig').pylsp.setup {
+      on_attach = function(client, bufnr)
+        navbuddy.attach(client, bufnr)
+      end,
+    }
+    require('lspconfig').ruff.setup {
+      on_attach = function(client, bufnr)
+        navbuddy.attach(client, bufnr)
+      end,
+    }
     -- document existing key chains
     -- require('which-key').register {
     --   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
