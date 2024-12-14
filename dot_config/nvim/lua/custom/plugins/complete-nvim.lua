@@ -1,3 +1,3 @@
-return {
+return { {
     'nvim-lua/completion-nvim',
-}
+} }

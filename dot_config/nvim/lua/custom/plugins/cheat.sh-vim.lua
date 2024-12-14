@@ -1,3 +1,3 @@
-return {
+return { {
   'dbeniamine/cheat.sh-vim',
-}
+} }

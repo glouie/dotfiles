@@ -14,6 +14,9 @@ map('n', '<leader><leader>x', '<cmd>source %<CR>', { desc = 'Source current file
 map('n', '<leader>e', ':.lua<CR>', { desc = 'Execute lua line.' })
 map('n', '<leader>e', ':lua<CR>', { desc = 'Execute highlighted lua lines.' })
 
+-- python keymaps
+map('n', '<leader>py', ':!python3 %<CR>', { desc = 'Run python3 on this file.' })
+
 -- Remap for dealing with word wrap
 map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
