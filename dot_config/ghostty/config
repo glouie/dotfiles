@@ -1,0 +1,47 @@
+theme = catppuccin-macchiato
+
+
+# keybindings
+
+# splits
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+j=goto_split:bottom
+keybind = ctrl+shift+k=goto_split:top
+keybind = ctrl+shift+l=goto_split:right
+
+keybind = ctrl+ >z=toggle_split_zoom
+keybind = ctrl+ >e=equalize_splits
+
+keybind = ctrl+ >\=new_split:right
+keybind = ctrl+ >-=new_split:down
+
+keybind = ctrl+ >x=close_surface
+
+# tabs
+keybind = ctrl+ >t=new_tab
+keybind = ctrl+ >h=next_tab
+keybind = ctrl+ >l=previous_tab
+keybind = ctrl+ >,=move_tab:-1
+keybind = ctrl+ >.=move_tab:1
+
+# quick tab switch
+keybind = ctrl+ >1=goto_tab:1
+keybind = ctrl+ >2=goto_tab:2
+keybind = ctrl+ >3=goto_tab:3
+keybind = ctrl+ >4=goto_tab:4
+keybind = ctrl+ >5=goto_tab:5
+keybind = ctrl+ >6=goto_tab:6
+keybind = ctrl+ >7=goto_tab:7
+keybind = ctrl+ >8=goto_tab:8
+keybind = ctrl+ >9=goto_tab:9
+keybind = ctrl+ >0=goto_tab:0
+
+copy-on-select = clipboard
+
+window-save-state = always
+clipboard-trim-trailing-spaces = true
+
+confirm-close-surface = false
+quit-after-last-window-closed = true
+
+shell-integration = zsh
