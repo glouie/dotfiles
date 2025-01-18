@@ -1,0 +1,24 @@
+[*.lua]
+indent_style = space
+indent_size = 2
+
+[*.py]
+indent_style = space
+indent_size = 4
+
+[*.js]
+indent_style = space
+indent_size = 2
+
+[*.jsx]
+indent_style = space
+indent_size = 2
+
+[*.tsx]
+indent_style = space
+indent_size = 2
+
+[*.ts]
+indent_style = space
+indent_size = 2
+
