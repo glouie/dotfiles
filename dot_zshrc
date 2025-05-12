@@ -113,8 +113,8 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 alias envs='env | grep -i'
 
 alias reload='source $HOME/.zshrc'
-alias editrc='nvim $HOME/.zshrc'
-alias editnvim='nvim $HOME/.config/nvim'
+alias editrc='cd $HOME;nvim $HOME/.zshrc'
+alias editnvim='cd $HOME/.config/nvim;nvim $HOME/.config/nvim'
 
 alias tm='tmux attach || tmux'
 
@@ -393,7 +393,7 @@ function gitcreatebranch(){
 }
 
 alias ga="git add"   
-alias ga="git add -p"
+alias gap="git add -p"
 alias gb="git branch"
 alias gba="git branch -a"
 alias gc="git commit -m"
@@ -401,10 +401,10 @@ alias gca="git commit -a -m"
 alias gcat="git cat-file -p"
 alias gco="git checkout"
 alias gcoall="git checkout -- ."
-alias gd="git diff"  
-alias gpl="git pull"  
-alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-alias gps="git push"  
+alias gd="git diff --output-indicator-new='n' --output-indicator-old='o'"  
+alias gpu="git pull"  
+alias gl="git log --all --graph --abbrev-commit --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %Cgreen(%cr) %C(bold blue)<%an>%Creset %n %s'"
+alias gp="git push"  
 alias gr="git remote"
 alias gre="git reset"
 alias gs="git status"
@@ -565,7 +565,7 @@ fi
 
 
 export DEFAULT_APP_LIST=( 
-    "atuin" 
+    # "atuin" 
     "bat" 
     # "cargo" 
     "direnv" 
@@ -607,9 +607,9 @@ function direnv_load() {
 }
 
 function eza_load() {
-    alias ls='eza --icons=always'
-    alias ll='eza -1GlTahx -L 1'
-    alias tree='eza --tree'
+    alias ls='eza -l --icons=always'
+    alias ll='eza -1GlTahx -L 1 --icons=always'
+    alias tree='eza --tree --icons=always'
 }
 
 function fzf_load() {

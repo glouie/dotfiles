@@ -22,6 +22,8 @@
 
 [pager]
     diff = diff-so-fancy | $PAGER
+    branch = false
+    tag = false
 
 [interactive]
     diffFilter = diff-so-fancy --patch 
@@ -31,5 +33,28 @@
     autoSetupRemote = true
     default = current
     followTags = true
+
+[log]
+    abbrevCommit = true
+    graphColor = blue,yellow,cyan,magenta,green,red 
+
+[color "decorate"]
+    HEAD = red 
+    branch = blue
+    tag = yellow
+    remoteBranch = magenta 
+
+[color "branch"]
+    current = magenta
+    local = default
+    remote = yellow
+    upstream = green 
+    plain = blue
+
+[branch]
+    sort = -committerDate
+
+[tag]
+    sort = -taggerDate
 
 

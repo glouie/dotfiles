@@ -28,7 +28,7 @@ vim.keymap.set('n', '<C-p>', '<cmd>:FZF<CR>')
 
 -- easy split generation
 vim.keymap.set('n', '<leader>|', ':vsplit<CR>') -- space+| creates vertical split
-vim.keymap.set('n', '<leader>-', ':split<CR>')  -- space+- creates horizontal split
+vim.keymap.set('n', '<leader>-', ':split<CR>') -- space+- creates horizontal split
 
 -- -- easy split navigation
 -- Keybinds to make split navigation easier.
@@ -40,9 +40,9 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set('n', '<Tab>', ':bnext <CR>')         -- goes to next buffer(file)
-vim.keymap.set('n', '<S-Tab>', ':bprevious <CR>')   -- goes to previous buffer
-vim.keymap.set('n', '<leader>x', ':bd! <CR>')       -- delete the current buffer
+vim.keymap.set('n', '<Tab>', ':bnext <CR>') -- goes to next buffer(file)
+vim.keymap.set('n', '<S-Tab>', ':bprevious <CR>') -- goes to previous buffer
+vim.keymap.set('n', '<leader>x', ':bd! <CR>') -- delete the current buffer
 vim.keymap.set('n', '<leader>b', '<cmd> enew <CR>') -- new buffer
 --
 -- vim.keymap.set('n', '<C-S-Left>', ':vertical resize +3<CR>') -- resize vertical by 3
@@ -116,13 +116,11 @@ vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<CR>', { desc = 'telesc
 vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<CR>', { desc = 'telescope help page' })
 vim.keymap.set('n', '<leader>ma', '<cmd>Telescope marks<CR>', { desc = 'telescope find marks' })
 vim.keymap.set('n', '<leader>fo', '<cmd>Telescope oldfiles<CR>', { desc = 'telescope find oldfiles' })
-vim.keymap.set('n', '<leader>fz', '<cmd>Telescope current_buffer_fuzzy_find<CR>',
-    { desc = 'telescope find in current buffer' })
+vim.keymap.set('n', '<leader>fz', '<cmd>Telescope current_buffer_fuzzy_find<CR>', { desc = 'telescope find in current buffer' })
 vim.keymap.set('n', '<leader>cm', '<cmd>Telescope git_commits<CR>', { desc = 'telescope git commits' })
 vim.keymap.set('n', '<leader>gt', '<cmd>Telescope git_status<CR>', { desc = 'telescope git status' })
 vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { desc = 'telescope find files' })
-vim.keymap.set('n', '<leader>fa', '<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>',
-    { desc = 'telescope find all files' })
+vim.keymap.set('n', '<leader>fa', '<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>', { desc = 'telescope find all files' })
 
 -- terminal
 vim.keymap.set('t', '<C-x>', '<C-\\><C-N>', { desc = 'terminal escape terminal mode' })
@@ -132,9 +130,9 @@ vim.keymap.set('n', '<leader>wK', '<cmd>WhichKey <CR>', { desc = 'whichkey all k
 
 -- Visual Maps
 vim.keymap.set('v', '<leader>r', '"hy:%s/<C-r>h//g<left><left>') -- find and replace
-vim.keymap.set('v', '<C-s>', ':sort<CR>')                        -- sort highlighted lines
-vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")                     -- move current line up
-vim.keymap.set('v', 'K', ":m '>-2<CR>gv=gv")                     -- move current line down
+vim.keymap.set('v', '<C-s>', ':sort<CR>') -- sort highlighted lines
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv") -- move current line up
+vim.keymap.set('v', 'K', ":m '>-2<CR>gv=gv") -- move current line down
 
 -- navigation
 vim.keymap.set('n', 'B', '^', { noremap = false })
@@ -153,8 +151,10 @@ vim.keymap.set('n', 'H', ':PounceRepeat<CR>', { silent = true, desc = 'Pounce Re
 -- end)
 
 -- lua
-vim.keymap.set('n', '<space>e', ":.lua<CR>", { silent = true, desc = "Run lua on the highlighted lines." })
-vim.keymap.set('v', '<space>e', ":lua<CR>", { silent = true, desc = "Run lua on the highlighted lines." })
-vim.keymap.set({ 'n', 'v' }, '<space>r', ":!lua %<CR>", { silent = true, desc = "Run lua on entire file." })
+vim.keymap.set('n', '<space>e', ':.lua<CR>', { silent = true, desc = 'Run lua on the highlighted lines.' })
+vim.keymap.set('v', '<space>e', ':lua<CR>', { silent = true, desc = 'Run lua on the highlighted lines.' })
+vim.keymap.set({ 'n', 'v' }, '<space>r', ':!lua %<CR>', { silent = true, desc = 'Run lua on entire file.' })
 
+-- neogen
+vim.api.nvim_set_keymap('n', '<leader>nf', ":lua require('neogen').generate()<CR>", { noremap = true, silent = true })
 return {}

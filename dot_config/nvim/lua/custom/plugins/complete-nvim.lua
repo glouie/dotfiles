@@ -1,3 +1,4 @@
 return { {
-    'nvim-lua/completion-nvim',
+  'nvim-lua/completion-nvim',
+  enabled = false,
 } }
