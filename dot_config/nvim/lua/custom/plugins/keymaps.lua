@@ -39,10 +39,10 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
+--
 vim.keymap.set('n', '<Tab>', ':bnext <CR>') -- goes to next buffer(file)
 vim.keymap.set('n', '<S-Tab>', ':bprevious <CR>') -- goes to previous buffer
-vim.keymap.set('n', '<leader>x', ':bd! <CR>') -- delete the current buffer
+vim.keymap.set('n', '<leader>x', ':bd <CR>') -- delete the current buffer
 vim.keymap.set('n', '<leader>b', '<cmd> enew <CR>') -- new buffer
 --
 -- vim.keymap.set('n', '<C-S-Left>', ':vertical resize +3<CR>') -- resize vertical by 3
@@ -78,6 +78,9 @@ vim.keymap.set('n', '<leader>lm', '<cmd>set wrap!<CR>', opts)
 -- Stay in indent mode while resizing
 vim.keymap.set('v', '<', '<gv', opts)
 vim.keymap.set('v', '>', '>gv', opts)
+
+vim.keymap.set('v', '<C-h>', '<gv', opts)
+vim.keymap.set('v', '<C-l>', '>gv', opts)
 
 -- Keey last yanked when pasting
 vim.keymap.set('v', 'p', '"_dP', opts)
@@ -149,11 +152,24 @@ vim.keymap.set('n', 'H', ':PounceRepeat<CR>', { silent = true, desc = 'Pounce Re
 -- vim.keymap.set('n', '<leader>=', function()
 --     vim.lsp.buf.format()
 -- end)
+vim.keymap.set('n', '==', 'ggVG', { silent = true, desc = 'Format buffer' })
 
 -- lua
 vim.keymap.set('n', '<space>e', ':.lua<CR>', { silent = true, desc = 'Run lua on the highlighted lines.' })
 vim.keymap.set('v', '<space>e', ':lua<CR>', { silent = true, desc = 'Run lua on the highlighted lines.' })
 vim.keymap.set({ 'n', 'v' }, '<space>r', ':!lua %<CR>', { silent = true, desc = 'Run lua on entire file.' })
+
+-- -- Map <Tab> to accept the completion suggestion
+-- vim.keymap.set('i', '<Tab>', '<C-n>', { silent = false, desc = 'Accept completion suggestion' })
+--
+-- -- Map <C-n> to go to the next completion suggestion
+-- vim.keymap.set('i', '<C-n>', '<C-n>', { silent = true, desc = 'Next completion suggestion' })
+--
+-- -- Map <CR> to insert the current suggestion
+-- vim.keymap.set('i', '<CR>', '<C-y>', { silent = true, desc = 'Insert suggestion' })
+--
+-- -- Map <C-y> to insert the current suggestion
+-- vim.keymap.set('i', '<C-y>', '<C-y>', { silent = true, desc = 'Insert suggestion' })
 
 -- neogen
 vim.api.nvim_set_keymap('n', '<leader>nf', ":lua require('neogen').generate()<CR>", { noremap = true, silent = true })
