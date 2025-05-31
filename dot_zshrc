@@ -113,8 +113,8 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 alias envs='env | grep -i'
 
 alias reload='source $HOME/.zshrc'
-alias editrc='cd $HOME;nvim $HOME/.zshrc'
-alias editnvim='cd $HOME/.config/nvim;nvim $HOME/.config/nvim'
+alias editrc='cd $HOME;nvim $HOME/.zshrc;cdb'
+alias editnvim='cd $HOME/.config/nvim;nvim $HOME/.config/nvim;cdb'
 
 alias tm='tmux attach || tmux'
 
@@ -133,9 +133,11 @@ alias show_remap='nvim $HOME/.config/nvim/lua/glouie/remap.lua'
 alias pip='pip3'
 alias python='python3'
 
-alias cha='chezmoi add'
-alias chu='chezmoi update'
-alias chc='chezmoi cd'
+alias ca='chezmoi add'
+alias cu='chezmoi update'
+alias cc='chezmoi cd'
+
+export EDITOR='nvim' 
 
 #################################################
 
@@ -664,8 +666,9 @@ function starship_load() {
 }
 
 function yazi_load(){
+    export YAZI_CONFIG_HOME='~/.config/yazi/'
 
-    function yy() {
+    function y() {
         yazi "$@" --cwd-file="$tmp"
         local tmp="$(mktemp -t "yazi-cwd")"
         if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
