@@ -139,19 +139,25 @@ alias cc='chezmoi cd'
 
 export EDITOR='nvim' 
 
+#################################################
+
+################################################
+############ my methods and tools ##############
+################################################
+
 # open file or look for a file. 
-function o() {
+function e() {
 
     if [ $# -gt 0 ]; then
       
-      if [[ "$1" == "-e" ]]; then
-        # If -e is passed as the first argument, assume editing files
-        $EDITOR "$@"
-      else
+      if [[ "$1" == "-o" ]]; then
+        # If -o is passed as the first argument, default to use 'open'
         open "$@"
+      else
+        $EDITOR "$@"
       fi
     else 
-        fd -H . | fzf --preview 'bat --color=always {}' --bind enter:'become(nvim {})'
+        fd -H . | fzf --preview 'cat --color=always {}' --bind enter:'become(nvim {})'
     fi
 }
 
