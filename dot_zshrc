@@ -137,7 +137,10 @@ alias ca='chezmoi add'
 alias cu='chezmoi update'
 alias cc='chezmoi cd'
 
-export EDITOR='nvim' 
+export EDITOR='nvim'
+
+# use nvim to read man pages.
+export MANPAGER='nvim +Man!'
 
 #################################################
 
@@ -584,7 +587,8 @@ if type "rg" > /dev/null; then
 fi
 
 if type "cargo" > /dev/null; then
-    alias rust="cargo"
+    alias rust='cargo'
+    alias cr='cargo run'
 fi
 
 
@@ -672,6 +676,7 @@ function fzf_load() {
     }
     
     alias fopen='fzf --preview "bat --color=always {}" --bind enter:"become(nvim {})"'
+    source <(fzf --zsh)
 }
 
 function htop_load() {
