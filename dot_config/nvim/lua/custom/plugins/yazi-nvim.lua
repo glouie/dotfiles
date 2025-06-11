@@ -1,58 +1,70 @@
 return {
-  ---@type LazySpec
-  {
-    'mikavilpas/yazi.nvim',
-    event = 'VeryLazy',
-    dependencies = {
-      -- check the installation instructions at
-      -- https://github.com/folke/snacks.nvim
-      'folke/snacks.nvim',
+    ---@type LazySpec
+    {
+        'mikavilpas/yazi.nvim',
+        event = 'VeryLazy',
+        dependencies = {
+            -- check the installation instructions at
+            -- https://github.com/folke/snacks.nvim
+            'folke/snacks.nvim',
+        },
+        keys = {
+            -- 👇 in this section, choose your own keymappings!
+            {
+                '<leader>-',
+                mode = { 'n', 'v' },
+                '<cmd>Yazi<cr>',
+                desc = 'Open yazi at the current file',
+            },
+            {
+                -- Open in the current working directory
+                '<leader>cw',
+                '<cmd>Yazi cwd<cr>',
+                desc = "Open the file manager in nvim's working directory",
+            },
+            {
+                -- This is to train me open yazi instead of NeoTree
+                '<leader>n',
+                '<cmd>Yazi cwd<cr>',
+                desc = "Open the file manager in nvim's working directory",
+            },
+            {
+                -- a bit easier to remember y is for yazi
+                '<leader>y',
+                '<cmd>Yazi cwd<cr>',
+                desc = "Open the file manager in nvim's working directory",
+            },
+            {
+                '<c-up>',
+                '<cmd>Yazi toggle<cr>',
+                desc = 'Resume the last yazi session',
+            },
+        },
+        ---@type YaziConfig | {}
+        opts = {
+            -- if you want to open yazi instead of netrw, see below for more info
+            open_for_directories = false,
+            keymaps = {
+                show_help = '<f1>',
+            },
+        },
+        -- 👇 if you use `open_for_directories=true`, this is recommended
+        init = function()
+            -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
+            -- vim.g.loaded_netrw = 1
+            vim.g.loaded_netrwPlugin = 1
+        end,
     },
-    keys = {
-      -- 👇 in this section, choose your own keymappings!
-      {
-        '<leader>-',
-        mode = { 'n', 'v' },
-        '<cmd>Yazi<cr>',
-        desc = 'Open yazi at the current file',
-      },
-      {
-        -- Open in the current working directory
-        '<leader>cw',
-        '<cmd>Yazi cwd<cr>',
-        desc = "Open the file manager in nvim's working directory",
-      },
-      {
-        -- This is to train me open yazi instead of NeoTree
-        '<leader>n',
-        '<cmd>Yazi cwd<cr>',
-        desc = "Open the file manager in nvim's working directory",
-      },
-      {
-        -- a bit easier to remember y is for yazi
-        '<leader>y',
-        '<cmd>Yazi cwd<cr>',
-        desc = "Open the file manager in nvim's working directory",
-      },
-      {
-        '<c-up>',
-        '<cmd>Yazi toggle<cr>',
-        desc = 'Resume the last yazi session',
-      },
-    },
-    ---@type YaziConfig | {}
-    opts = {
-      -- if you want to open yazi instead of netrw, see below for more info
-      open_for_directories = false,
-      keymaps = {
-        show_help = '<f1>',
-      },
-    },
-    -- 👇 if you use `open_for_directories=true`, this is recommended
-    init = function()
-      -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
-      -- vim.g.loaded_netrw = 1
-      vim.g.loaded_netrwPlugin = 1
-    end,
-  },
+
+
+    -- open yazi if nvim opens in a directory
+    vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+            local argv = vim.fn.argv()
+            if #argv == 1 and vim.fn.isdirectory(argv[1]) == 1 then
+                vim.cmd(":Yazi cwd")
+                -- vim.fn.jobstart({ "yazi", argv[1] }, { detach = true })
+            end
+        end
+    })
 }
