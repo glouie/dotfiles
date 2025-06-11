@@ -1,4 +1,4 @@
 return { {
   'kdheepak/lazygit.nvim',
-  enabled = false,
+  enabled = true,
 } }
