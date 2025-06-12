@@ -9,14 +9,6 @@ vim.g.mapleader = ' '
 -- Disables the spacebar key from default behavior in Normal and Visual mode
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
-
--- which key directory, starting with <leader>
-require('which-key').register {
-    ['<leader>f'] = { name = '[F]ind with telescope', _ = 'which_key_ignore' },
-    ['<leader>l'] = { name = '[L]ua', _ = 'which_key_ignore' },
-    ['<leader>p'] = { name = '[P]ython', _ = 'which_key_ignore' },
-}
-
 -- lua keymaps
 vim.keymap.set('n', '<leader>ls', '<cmd>:so ~/.config/nvim/init.lua<CR>', { desc = '[S]ource nvim init file.' })
 vim.keymap.set('n', '<leader>lf', '<cmd>source %<CR>', { desc = 'Source current [f]ile.' })
@@ -132,25 +124,25 @@ vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<CR>', { desc = 'Tele
 vim.keymap.set('n', '<leader>ma', '<cmd>Telescope marks<CR>', { desc = 'Telescope find [m]arks' })
 vim.keymap.set('n', '<leader>fo', '<cmd>Telescope oldfiles<CR>', { desc = 'Telescope find [o]ldfiles' })
 vim.keymap.set('n', '<leader>fz', '<cmd>Telescope current_buffer_fuzzy_find<CR>',
-    { desc = 'Telescope find in current buffer[z]' })
+  { desc = 'Telescope find in current buffer[z]' })
 vim.keymap.set('n', '<leader>fc', '<cmd>Telescope git_commits<CR>', { desc = 'Telescope git [c]ommits' })
 vim.keymap.set('n', '<leader>fs', '<cmd>Telescope git_status<CR>', { desc = 'Telescope git [s]tatus' })
 vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { desc = 'Telescope find [f]iles' })
 vim.keymap.set('n', '<leader>fa', '<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>',
-    { desc = 'Telescope find [a]ll files' })
+  { desc = 'Telescope find [a]ll files' })
 
 -- terminal
--- <C-/> is mapped to opening the terminal, in a the snacks-nvim.lua file. 
+-- <C-/> is mapped to opening the terminal, in a the snacks-nvim.lua file.
 vim.keymap.set('t', '<C-x>', '<C-\\><C-N>', { desc = 'Terminal: escape terminal mode' })
 
 -- whichkey
 vim.keymap.set('n', '<leader>wK', '<cmd>WhichKey <CR>', { desc = 'Whichkey all keymaps' })
 
 -- Visual Maps
-vim.keymap.set('v', '<leader>r', '"hy:%s/<C-r>h//g<left><left>', {desc = 'Find and replace'})
-vim.keymap.set('v', '<C-s>', ':sort<CR>', {desc = 'Sort highlighted lines'}) 
-vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", {desc = 'Move current line up'})
-vim.keymap.set('v', 'K', ":m '>-2<CR>gv=gv" {desc = 'Move current line down'})
+vim.keymap.set('v', '<leader>r', '"hy:%s/<C-r>h//g<left><left>', { desc = 'Find and replace' })
+vim.keymap.set('v', '<C-s>', ':sort<CR>', { desc = 'Sort highlighted lines' })
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move current line up' })
+vim.keymap.set('v', 'K', ":m '>-2<CR>gv=gv", { desc = 'Move current line down' })
 
 -- vim.keymap.set('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
 
@@ -161,11 +153,14 @@ vim.keymap.set('n', 'H', ':PounceRepeat<CR>', { silent = true, desc = 'Pounce Re
 -- format
 -- defined in the lsp.lua file
 vim.keymap.set('n', '<leader>=', function()
-    vim.lsp.buf.format()
+  vim.lsp.buf.format()
 end, { silent = true, desc = 'Format buffer' })
 
 -- neogen
-vim.api.nvim_set_keymap('n', '<leader>nf', ":lua require('neogen').generate()<CR>", { desc = 'Generate documentation.', noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>nf', ":lua require('neogen').generate()<CR>",
+  { desc = 'Generate documentation.', noremap = true, silent = true })
 
 -- zen-mode
 vim.keymap.set('n', '<leader><cr>', '<cmd>ZenMode<CR>', { desc = 'Toggle Zen Mode' })
+
+return {}
