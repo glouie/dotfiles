@@ -1,246 +1,322 @@
+---@diagnostic disable: undefined-global
 -- NOTE: This is where your plugins related to LSP can be installed.
 --  The configuration is done below. Search for lspconfig to find it below.
 return {
-  {
-    -- LSP Configuration & Plugins
-    'neovim/nvim-lspconfig',
-    dependencies = {
-      opts = { lsp = { auto_attach = true } },
-      -- Automatically install LSPs to stdpath for neovim
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
+    {
+        -- LSP Configuration & Plugins
+        'neovim/nvim-lspconfig',
+        dependencies = {
+            opts = { lsp = { auto_attach = true } },
+            -- Automatically install LSPs to stdpath for neovim
+            'williamboman/mason.nvim',
+            'williamboman/mason-lspconfig.nvim',
+            'WhoIsSethDaniel/mason-tool-installer.nvim',
 
-      -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+            -- Useful status updates for LSP
+            -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+            { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
 
-      -- Additional lua configuration, makes nvim stuff amazing!
-      { 'folke/neodev.nvim' },
-    },
-    config = function()
-      -- mason-lspconfig requires that these setup functions are called in this order
-      -- before setting up the servers.
-      require('mason').setup {
-        ui = {
-          icons = {
-            package_installed = '✓',
-            package_pending = '➜',
-            package_uninstalled = '✗',
-          },
+            -- Additional lua configuration, makes nvim stuff amazing!
+            { 'folke/neodev.nvim' },
         },
-      }
+        config = function()
+            -- mason-lspconfig requires that these setup functions are called in this order
+            -- before setting up the servers.
+            require('mason').setup {
+                ui = {
+                    icons = {
+                        package_installed = '✓',
+                        package_pending = '➜',
+                        package_uninstalled = '✗',
+                    },
+                },
+            }
 
-      require('mason-tool-installer').setup {
-        ensure_installed = {
-          'prettier',
-          'prettierd',
-          'stylua',
-          'isort',
-          'black',
-          'pylint',
-          'rust-analyzer',
-        },
-      }
+            require('mason-tool-installer').setup {
+                ensure_installed = {
+                    'prettier',
+                    'prettierd',
+                    'stylua',
+                    'isort',
+                    'black',
+                    'pylint',
+                    'rust-analyzer',
+                },
+            }
 
-      require('mason-lspconfig').setup()
-      -- Enable the following language servers
-      --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
-      --
-      --  Add any additional override configuration in the following tables. They will be passed to
-      --  the `settings` field of the server config. You must look up that documentation yourself.
-      --
-      --  If you want to override the default filetypes that your language server will attach to you can
-      --  define the property 'filetypes' to the map in question.
-      local servers = {
-        -- clangd = {},
-        -- gopls = {},
-        pyright = {},
-        rust_analyzer = { filetypes = { 'rs' } },
-        html = { filetypes = { 'html', 'twig', 'hbs' } },
-        ruff = {},
-        pylsp = {
-          settings = {
-            pylsp = {
-              plugins = {
-                pyflakes = { enabled = false },
-                pycodestyle = { enabled = false },
-                autopep8 = { enabled = false },
-                yapf = { enabled = false },
-                mccabe = { enabled = false },
-                pylsp_mypy = { enabled = false },
-                pylsp_black = { enabled = false },
-                pylsp_isort = { enabled = false },
-              },
-            },
-          },
-        },
-        lua_ls = {
-          Lua = {
-            runtime = {
-              -- version = 'LuaJIT',
-              -- path = vim.split(package.path, ';'),
-            },
-            workspace = {
-              checkThirdParty = false,
-              library = { vim.env.VIMRUNTIME },
-              ignoreDir = { '.vscode', '.git' },
-              useGitIgnore = true,
-            },
-            telemetry = { enable = false },
-          },
-        },
-      }
+            require('mason-lspconfig').setup()
+            -- Setup neovim lua configuration
+            require('neodev').setup()
 
-      -- Setup neovim lua configuration
-      require('neodev').setup()
+            -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+            -- local capabilities = vim.lsp.protocol.make_client_capabilities()
+            -- capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
-      -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      -- capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+            -- Ensure the servers above are installed
+            local mason_lspconfig = require 'mason-lspconfig'
+            mason_lspconfig.setup {
+                automatic_enable = true,
+                ensure_installed = {
+                    'pylsp',
+                    'rust_analyzer',
+                    'lua_ls',
+                },
+            }
 
-      -- Ensure the servers above are installed
-      local mason_lspconfig = require 'mason-lspconfig'
-      -- local on_attach = function(_, bufnr)
-      --     mason_lspconfig.setup {
-      --         ensure_installed = vim.tbl_keys(servers),
-      --     }
-      --
-      --     mason_lspconfig.setup_handlers {
-      --         function(server_name)
-      --             require('lspconfig')[server_name].setup {
-      --                 capabilities = capabilities,
-      --                 on_attach = on_attach,
-      --                 settings = servers[server_name],
-      --                 filetypes = (servers[server_name] or {}).filetypes,
-      --             }
-      --         end,
-      --     }
-      --
-      --     -- [[ Configure LSP ]]
-      --     --  This function gets run when an LSP connects to a particular buffer.
-      --     -- NOTE: Remember that lua is a real programming language, and as such it is possible
-      --     -- to define small helper and utility functions so you don't have to repeat yourself
-      --     -- many times.
-      --     --
-      --     -- In this case, we create a function that lets us more easily define mappings specific
-      --     -- for LSP related items. It sets the mode, buffer and description for us each time.
-      --     local nmap = function(keys, func, desc)
-      --         if desc then
-      --             desc = 'LSP: ' .. desc
-      --         end
-      --
-      --         vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
-      --     end
-      --
-      --     nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-      --     nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-      --
-      --     nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
-      --     nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-      --     nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-      --     nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
-      --     nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-      --     nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-      --
-      --     -- See `:help K` for why this keymap
-      --     nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-      --     nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-      --
-      --     -- Lesser used LSP functionality
-      --     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-      --     nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-      --     nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-      --     nmap('<leader>wl', function()
-      --         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-      --     end, '[W]orkspace [L]ist Folders')
-      --
-      --     -- Create a command `:Format` local to the LSP buffer
-      --     vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-      --         vim.lsp.buf.format()
-      --     end, { desc = 'Format current buffer with LSP' })
-      -- end
+            -- Virtual text for errors
+            vim.diagnostic.config {
+                virtual_text = {
+                    prefix = '●', -- Can be '●', '■', '▎', '➤', or just "" for no prefix
+                    spacing = 2,
+                },
+                signs = true,             -- Show signs in the gutter
+                underline = true,         -- Underline the error line
+                update_in_insert = false, -- Avoid updating while typing
+                severity_sort = true,     -- Show most severe issues first
+            }
 
-      local navbuddy = require 'nvim-navbuddy'
+            local navbuddy = require 'nvim-navbuddy'
+            local lspconfig = require 'lspconfig'
 
-      require('lspconfig').html.setup {
-        on_attach = function(client, bufnr)
-          navbuddy.attach(client, bufnr)
-        end,
-      }
+            lspconfig.html.setup {
+                on_attach = function(client, bufnr)
+                    navbuddy.attach(client, bufnr)
+                end,
+            }
 
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
-      require('lspconfig').lua_ls.setup {
-        on_attach = function(client, bufnr)
-          navbuddy.attach(client, bufnr)
-        end,
-        capabilities = capabilities,
+            local capabilities = require('blink.cmp').get_lsp_capabilities()
+            lspconfig.lua_ls.setup {
+                on_attach = function(client, bufnr)
+                    navbuddy.attach(client, bufnr)
 
-        vim.keymap.set('n', '<leader>=', function()
-          vim.lsp.buf.format()
-        end),
-      }
+                    vim.keymap.set('n', '<leader>=', function()
+                        vim.lsp.buf.format()
+                    end, { buffer = bufnr, desc = 'Format Document' })
+                end,
+                capabilities = capabilities,
+                settings = {
+                    Lua = {
+                        diagnostics = {
+                            globals = { 'vim' },
+                        },
+                    },
+                },
+            }
 
-      vim.api.nvim_create_autocmd('LspAttach', {
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if not client then
-            return
-          end
+            vim.api.nvim_create_autocmd('LspAttach', {
+                callback = function(args)
+                    local client = vim.lsp.get_client_by_id(args.data.client_id)
+                    if not client then
+                        return
+                    end
 
-          if client.supports_method 'textDocument/formatting' then
-            vim.api.nvim_create_autocmd('BufWritePre', {
-              buffer = args.buf,
-              callback = function()
-                vim.lsp.buf.format { bufnr = args.buf, id = args.data.client_id }
-              end,
+                    if client.supports_method and client:supports_method 'textDocument/formatting' then
+                        vim.api.nvim_create_autocmd('BufWritePre', {
+                            buffer = args.buf,
+                            callback = function()
+                                vim.lsp.buf.format { bufnr = args.buf, id = args.data.client_id }
+                            end,
+                        })
+                    end
+                end,
             })
-          end
-        end,
-      })
 
-      require('lspconfig').pyright.setup {
-        on_attach = function(client, bufnr)
-          navbuddy.attach(client, bufnr)
+            lspconfig.pyright.setup {
+                on_attach = function(client, bufnr)
+                    navbuddy.attach(client, bufnr)
+                end,
+            }
+            lspconfig.pylsp.setup {
+                on_attach = function(client, bufnr)
+                    navbuddy.attach(client, bufnr)
+                end,
+            }
+            lspconfig.rust_analyzer.setup {
+                on_attach = function(client, bufnr)
+                    navbuddy.attach(client, bufnr)
+                end,
+            }
         end,
-      }
-      require('lspconfig').pylsp.setup {
-        on_attach = function(client, bufnr)
-          navbuddy.attach(client, bufnr)
-        end,
-      }
-      require('lspconfig').ruff.setup {
-        on_attach = function(client, bufnr)
-          navbuddy.attach(client, bufnr)
-        end,
-      }
-      -- document existing key chains
-      -- require('which-key').register {
-      --   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-      --   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-      --   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-      --   ['<leader>h'] = { name = 'More git', _ = 'which_key_ignore' },
-      --   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-      --   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-      --   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-      -- }
+    },
+    {
+        'simrat39/rust-tools.nvim',
+        config = function()
+            local rt = require 'rust-tools'
+            rt.setup {
+                dap = {
+                    adapter = {
+                        type = 'executable',
+                        command = 'lldb-vscode',
+                        name = 'rt_lldb',
+                    },
+                },
+                tools = {
+                    autoSetHints = true,
+                    hover_with_actions = true,
 
-      -- require('which-key').register {
-      --     { '<leader>c',  group = '[C]ode' },
-      --     { '<leader>c_', hidden = true },
-      --     { '<leader>d',  group = '[D]ocument' },
-      --     { '<leader>d_', hidden = true },
-      --     { '<leader>g',  group = '[G]it' },
-      --     { '<leader>g_', hidden = true },
-      --     { '<leader>h',  group = 'More git' },
-      --     { '<leader>h_', hidden = true },
-      --     { '<leader>r',  group = '[R]ename' },
-      --     { '<leader>r_', hidden = true },
-      --     { '<leader>s',  group = '[S]earch' },
-      --     { '<leader>s_', hidden = true },
-      --     { '<leader>w',  group = '[W]orkspace' },
-      --     { '<leader>w_', hidden = true },
-      -- }
-    end,
-  },
+                    -- how to execute terminal commands
+                    -- options right now: termopen / quickfix / toggleterm / vimux
+                    executor = require('rust-tools.executors').termopen,
+
+                    -- callback to execute once rust-analyzer is done initializing the workspace
+                    -- The callback receives one parameter indicating the `health` of the server: "ok" | "warning" | "error"
+                    on_initialized = nil,
+
+                    -- automatically call RustReloadWorkspace when writing to a Cargo.toml file.
+                    reload_workspace_from_cargo_toml = true,
+
+                    -- These apply to the default RustSetInlayHints command
+                    inlay_hints = {
+                        -- automatically set inlay hints (type hints)
+                        -- default: true
+                        auto = true,
+
+                        -- Only show inlay hints for the current line
+                        only_current_line = false,
+
+                        -- whether to show parameter hints with the inlay hints or not
+                        -- default: true
+                        show_parameter_hints = true,
+
+                        -- prefix for parameter hints
+                        -- default: "<-"
+                        parameter_hints_prefix = '<- ',
+
+                        -- prefix for all the other hints (type, chaining)
+                        -- default: "=>"
+                        other_hints_prefix = '=> ',
+
+                        -- whether to align to the length of the longest line in the file
+                        max_len_align = false,
+
+                        -- padding from the left if max_len_align is true
+                        max_len_align_padding = 1,
+
+                        -- whether to align to the extreme right or not
+                        right_align = false,
+
+                        -- padding from the right if right_align is true
+                        right_align_padding = 7,
+
+                        -- The color of the hints
+                        highlight = 'Comment',
+                    },
+
+                    -- options same as lsp hover / vim.lsp.util.open_floating_preview()
+                    hover_actions = {
+
+                        -- the border that is used for the hover window
+                        -- see vim.api.nvim_open_win()
+                        border = {
+                            { '╭', 'FloatBorder' },
+                            { '─', 'FloatBorder' },
+                            { '╮', 'FloatBorder' },
+                            { '│', 'FloatBorder' },
+                            { '╯', 'FloatBorder' },
+                            { '─', 'FloatBorder' },
+                            { '╰', 'FloatBorder' },
+                            { '│', 'FloatBorder' },
+                        },
+
+                        -- Maximal width of the hover window. Nil means no max.
+                        max_width = nil,
+
+                        -- Maximal height of the hover window. Nil means no max.
+                        max_height = nil,
+
+                        -- whether the hover action window gets automatically focused
+                        -- default: false
+                        auto_focus = false,
+                    },
+
+                    -- settings for showing the crate graph based on graphviz and the dot
+                    -- command
+                    crate_graph = {
+                        -- Backend used for displaying the graph
+                        -- see: https://graphviz.org/docs/outputs/
+                        -- default: x11
+                        backend = 'x11',
+                        -- where to store the output, nil for no output stored (relative
+                        -- path from pwd)
+                        -- default: nil
+                        output = nil,
+                        -- true for all crates.io and external crates, false only the local
+                        -- crates
+                        -- default: true
+                        full = true,
+
+                        -- List of backends found on: https://graphviz.org/docs/outputs/
+                        -- Is used for input validation and autocompletion
+                        -- Last updated: 2021-08-26
+                        enabled_graphviz_backends = {
+                            'bmp',
+                            'cgimage',
+                            'canon',
+                            'dot',
+                            'gv',
+                            'xdot',
+                            'xdot1.2',
+                            'xdot1.4',
+                            'eps',
+                            'exr',
+                            'fig',
+                            'gd',
+                            'gd2',
+                            'gif',
+                            'gtk',
+                            'ico',
+                            'cmap',
+                            'ismap',
+                            'imap',
+                            'cmapx',
+                            'imap_np',
+                            'cmapx_np',
+                            'jpg',
+                            'jpeg',
+                            'jpe',
+                            'jp2',
+                            'json',
+                            'json0',
+                            'dot_json',
+                            'xdot_json',
+                            'pdf',
+                            'pic',
+                            'pct',
+                            'pict',
+                            'plain',
+                            'plain-ext',
+                            'png',
+                            'pov',
+                            'ps',
+                            'ps2',
+                            'psd',
+                            'sgi',
+                            'svg',
+                            'svgz',
+                            'tga',
+                            'tiff',
+                            'tif',
+                            'tk',
+                            'vml',
+                            'vmlz',
+                            'wbmp',
+                            'webp',
+                            'xlib',
+                            'x11',
+                        },
+                    },
+                },
+                server = {
+                    on_attach = function(_, bufnr)
+                        -- Hover actions
+                        vim.keymap.set('n', '<C-space>', rt.hover_actions.hover_actions, { buffer = bufnr })
+                        -- Code action groups
+                        vim.keymap.set('n', '<Leader>a', rt.code_action_group.code_action_group, { buffer = bufnr })
+                    end,
+                },
+            }
+            rt.inlay_hints.enable()
+            rt.hover_actions.hover_actions()
+        end,
+    },
 }
