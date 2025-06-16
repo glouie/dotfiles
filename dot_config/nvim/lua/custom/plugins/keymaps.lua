@@ -124,12 +124,12 @@ vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<CR>', { desc = 'Tele
 vim.keymap.set('n', '<leader>ma', '<cmd>Telescope marks<CR>', { desc = 'Telescope find [m]arks' })
 vim.keymap.set('n', '<leader>fo', '<cmd>Telescope oldfiles<CR>', { desc = 'Telescope find [o]ldfiles' })
 vim.keymap.set('n', '<leader>fz', '<cmd>Telescope current_buffer_fuzzy_find<CR>',
-    { desc = 'Telescope find in current buffer[z]' })
+  { desc = 'Telescope find in current buffer[z]' })
 vim.keymap.set('n', '<leader>fc', '<cmd>Telescope git_commits<CR>', { desc = 'Telescope git [c]ommits' })
 vim.keymap.set('n', '<leader>fs', '<cmd>Telescope git_status<CR>', { desc = 'Telescope git [s]tatus' })
 vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { desc = 'Telescope find [f]iles' })
 vim.keymap.set('n', '<leader>fa', '<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>',
-    { desc = 'Telescope find [a]ll files' })
+  { desc = 'Telescope find [a]ll files' })
 
 -- terminal
 -- <C-/> is mapped to opening the terminal, in a the snacks-nvim.lua file.
@@ -153,16 +153,16 @@ vim.keymap.set('n', 'H', ':PounceRepeat<CR>', { silent = true, desc = 'Pounce Re
 -- format
 -- defined in the lsp.lua file
 vim.keymap.set('n', '<leader>=', function()
-    vim.lsp.buf.format()
+  vim.lsp.buf.format()
 end, { silent = true, desc = 'Format buffer' })
 
 -- neogen
 vim.api.nvim_set_keymap('n', '<leader>nf', ":lua require('neogen').generate()<CR>",
-    { desc = 'Generate documentation.', noremap = true, silent = true })
+  { desc = 'Generate documentation.', noremap = true, silent = true })
 
 -- zen-mode
 vim.keymap.set('n', '<leader><cr>', '<cmd>ZenMode<CR>', { desc = 'Toggle Zen Mode' })
 
 -- try and fix the esc issue not leaving insert mode
-vim.keymap.set('n', '<esc>', '<ESC>', { desc = 'Escape is escape' })
+vim.keymap.set('i', '<esc>', '<ESC>', { desc = 'Escape is escape' })
 return {}
