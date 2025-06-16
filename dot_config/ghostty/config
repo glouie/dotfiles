@@ -1,4 +1,4 @@
-theme = catppuccin-macchiato
+
 
 
 # keybindings
@@ -35,6 +35,9 @@ keybind = ctrl+ >7=goto_tab:7
 keybind = ctrl+ >8=goto_tab:8
 keybind = ctrl+ >9=goto_tab:9
 keybind = ctrl+ >0=goto_tab:0
+
+# zen mode
+# keybind = cmd+shift+return=toggle_split_zoom
 
 copy-on-select = clipboard
 
